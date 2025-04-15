@@ -92,6 +92,9 @@
                     <li class="nav-item">
                         <a class="nav-link nav-1" id="pills-plan-manhours-tab" data-toggle="pill" href="#pills-plan-manhours" role="tab" aria-controls="pills-plan-manhours" aria-selected="false">Reports Man Hours</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-1" id="formTeam-tab" data-toggle="pill" href="#formTeam" role="tab" aria-controls="formTeam" aria-selected="false">Form Team Project</a>
+                    </li>
                 </ul>
             </div>
             <div class="tab-content mb-1" id="pills-tabContent">
@@ -104,7 +107,9 @@
                 <div class="tab-pane fade" id="pills-plan-manhours" role="tabpanel" aria-labelledby="pills-plan-manhours-tab">
                     @include('menuproject.reportmanhours')
                 </div>
-
+                <div class="tab-pane fade" id="formTeam" role="tabpanel" aria-labelledby="formTeam-tab">
+                    @include('menuproject.formTeam')
+                </div>
             </div>
         </div>
     </div> <!-- .row -->

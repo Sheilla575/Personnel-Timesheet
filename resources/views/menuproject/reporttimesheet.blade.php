@@ -73,13 +73,14 @@
             <thead>
                 <tr class="thead-light">
                     <th class="w-25" colspan="2" style="font-size: 14px; padding-left: 3.5rem;">User</th>
-                    <th class="days-column" style="font-size: 14px;">Mon Des 09</th>
-                    <th class="days-column" style="font-size: 14px;">Tue Des 10</th>
-                    <th class="days-column" style="font-size: 14px;">Wed Des 11</th>
-                    <th class="days-column" style="font-size: 14px;">Thu Des 12</th>
-                    <th class="days-column" style="font-size: 14px;">Fri Des 13</th>
-                    <th class="days-column" style="font-size: 14px;">Sat Des 14</th>
-                    <th class="days-column" style="font-size: 14px;">Sun Des 15</th>
+                    <th class="days-column" style="font-size: 14px;">Day 1</th>
+                    <th class="days-column" style="font-size: 14px;">Day 2</th>
+                    <th class="days-column" style="font-size: 14px;">Day 3</th>
+                    <th class="days-column" style="font-size: 14px;">Day 4</th>
+                    <th class="days-column" style="font-size: 14px;">Day 5</th>
+                    <th class="days-column" style="font-size: 14px;">Day 6</th>
+                    <th class="days-column" style="font-size: 14px;">Day 7</th>
+
                     <th style="font-size: 14px;">Total Man-hrs</th>
                     <th style="font-size: 14px;">Status</th>
                     <th style="font-size: 14px;">Action</th>
@@ -91,20 +92,20 @@
                 <tr class="accordion-toggle collapsed" id="c-{{ $t->id_employee }}" data-toggle="collapse" data-parent="#c-{{ $t->id_employee }}" href="#collap-{{ $t->id_employee }}" style="border-bottom: 1px;">
                     <td class="border-0" style="width: 10px;">
                         <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="all" />
-                            <label class="custom-control-label" for="all"></label>
+                            <input type="checkbox" class="custom-control-input" id="{{ $t->id_employee }}" />
+                            <label class="custom-control-label" for="{{ $t->id_employee }}"></label>
                         </div>
                     </td>
                     <td class="w-25 border-0">
-                        {{ $t->employee->name_user }}<br /><span class="small text-muted">{{ $t->employee->position->positions_name }}</span>
+                        {{ $t->employee->name }}<br /><span class="small text-muted">{{ $t->employee->position->positions_name }}</span>
                     </td>
-                    <td class="">8h</td>
-                    <td class="">8h</td>
-                    <td class="">8h</td>
-                    <td class="">8h</span></td>
-                    <td class="">8h</td>
-                    <td class="">0h</td>
-                    <td class="">0h</td>
+                    <td class="">0</td>
+                    <td class="">0</td>
+                    <td class="">0</td>
+                    <td class="">0</span></td>
+                    <td class="">0</td>
+                    <td class="">0</td>
+                    <td class="">0</td>
                     @if($timesheet->where('id_employee', $t->id_employee))
                     <!-- @foreach($timesheetactivity as $day)
                     <td class="">{{ $day->sum('hours') }}
@@ -120,7 +121,7 @@
                     @endforeach -->
                     <td>
                         @if($timesheet->where('id_employee', $t->id_employee))
-                        {{ $timesheetactivity->where('hours')->sum('hours') }}
+                        {{ $timesheetactivity->where('id_timesheet', '$t->employee->timesheet->id')->sum('hours') }}
                         @endif
                     </td>
                     @else
@@ -142,6 +143,7 @@
                 @if($t->id_employee == $s->id_employee)
                 <tr id="collap-{{ $s->id_employee }}" class="collapse in p-3 bg-light">
                     <td colspan="">
+                        Week - {{ $s->week }}
                     </td>
                     <td>{{ $s->activity->name_activity }}</td>
                     @foreach($timesheetactivity->where('id_timesheet', $s->id) as $ta)
@@ -157,7 +159,7 @@
                     </td>
                     @endforeach
                     <td class="">{{ $timesheetactivity->where('id_timesheet', $s->id)->sum('hours') }}</td>
-                    <td colspan="2"></td>
+                    <td colspan="2">{{ $s->status }}</td>
                 </tr>
                 @endif
                 @endforeach
@@ -172,7 +174,7 @@
                     <th>
                         <div class="d-flex justify-content-between">
                             <button type="button" class="btn mb-2 btn-success text-white ml-2 mr-2" style="width: 95px;box-shadow: 6px 8px 9px rgba(203, 216, 227, 0.5);">Approve</button>
-                            <button type="button" class="btn mb-2 btn-secondary text-white ml-2 mr-2" style="width: 95px; box-shadow: 6px 8px 9px rgba(203, 216, 227, 0.5);"><span class="fe fe-check fe-22 mr-2"></span>Reject</button>
+                            <button type="button" class="btn mb-2 btn-secondary text-white mr-2" style="width: 95px; box-shadow: 6px 8px 9px rgba(203, 216, 227, 0.5);"><span class="fe fe-check fe-22 mr-2"></span>Reject</button>
                         </div>
                     </th>
                     <th class="days-column">16h</th>
@@ -187,5 +189,8 @@
                 </tr>
             </thead>
         </table>
+
+        <livewire:report-manhours :year="2025" :week="17" :codeProject="$project->code_project" />
+
     </div> <!-- .card-body -->
 </div> <!-- .card -->

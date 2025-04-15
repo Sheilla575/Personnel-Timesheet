@@ -5,9 +5,11 @@ namespace App\Livewire;
 use App\Imports\ActivityImport;
 use App\Models\Activity;
 use App\Models\Disciplin;
+use App\Models\LogImport;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Str;
 
 class ImportActivity extends Component
 {
@@ -38,6 +40,7 @@ class ImportActivity extends Component
     public function validatePreviewData()
     {
         $this->validationErrors = [];
+        $skippedCount = 0;
 
         foreach ($this->previewData as $index => $row) {
             $errors = [];
@@ -59,12 +62,23 @@ class ImportActivity extends Component
 
             if (!empty($errors)) {
                 $this->validationErrors[$index] = $errors;
+                $skippedCount++;
             }
         }
+        LogImport::create([
+            'source_table' => 'activities', // atau sesuai kebutuhanmu
+            'filename' => $this->file->getClientOriginalName(),
+            'status' => 'failed',
+            'user_id' => auth()->id(),
+            'message' =>  "The data does not meet the required input criteria, Error Input: $skippedCount row data", // batasi agar tidak terlalu panjang
+            'imported_at' => now(),
+        ]);
     }
 
     public function import()
     {
+        $importedCount = 0;
+        $skippedCount = 0;
         foreach ($this->previewData as $index => $row) {
             if (!isset($this->validationErrors[$index])) {
                 Activity::updateOrCreate(
@@ -74,9 +88,19 @@ class ImportActivity extends Component
                         'name_activity' => $row['name_activity'],
                     ]
                 );
+                $importedCount++;
+            } else {
+                $skippedCount++;
             }
         }
-
+        LogImport::create([
+            'source_table' => 'team_project',
+            'filename' => $this->file->getClientOriginalName(),
+            'status' => 'success',
+            'user_id' => Auth::id(),
+            'message' => "Imported: $importedCount, skipped: $skippedCount",
+            'imported_at' => now(),
+        ]);
         session()->flash('success', 'Import selesai');
         $this->reset(['file', 'previewData', 'validationErrors']);
     }

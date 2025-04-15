@@ -62,6 +62,11 @@ class Timesheet extends Model
         return $this->belongsTo(Project::class, 'code_project', 'code_project');
     }
 
+    public function discipline()
+    {
+        return $this->belongsTo(Disciplin::class, 'code_project', 'id'); // Assuming 'code_project' is the foreign key in the 'disciplin' table
+    }
+
     public function activity()
     {
         return $this->belongsTo(Activity::class, 'code_activity', 'id');

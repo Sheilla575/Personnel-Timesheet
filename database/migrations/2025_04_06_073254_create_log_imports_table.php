@@ -12,9 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('log_imports', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->string('source_table');
-            $table->string('imported_code');
+            $table->string('filename');
+            $table->string('status'); // pending, success, error
+            $table->string('user_id');
+            $table->string('message', 255);
             $table->timestamp('imported_at')->useCurrent();
             $table->timestamps();
         });

@@ -43,17 +43,32 @@
                     <span class="ml-3 item-text">Project</span>
                 </a>
             </li>
-            <li class="nav-item w-100">
-                <a class="nav-link" href="{{ route('index_calender') }}">
-                    <i class="fe fe-calendar fe-16"></i>
-                    <span class="ml-3 item-text">Calendar</span>
+        </ul>
+        <ul class="navbar-nav flex-fill w-100 mb-2">
+            <li class="nav-item dropdown">
+                <a href="#Discipline" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
+                    <i class="fe fe-award fe-16"></i>
+                    <span class="ml-3 item-text">Discipline</span>
                 </a>
+                <ul class="collapse list-unstyled pl-4 w-100" id="Discipline">
+                    @foreach ($disciplines as $item)
+                    <li class="nav-item">
+                        <a class="nav-link pl-3" href="{{ Route('index_Discipline', $item->id ) }}"><span class="ml-1 item-text">{{ $item->disciplin_name }}</span></a>
+                    </li>
+                    @endforeach
+                </ul>
             </li>
         </ul>
         <p class="text-muted nav-heading mt-4 mb-1">
             <span>Setting Controller</span>
         </p>
         <ul class="navbar-nav flex-fill w-100 mb-2">
+            <li class="nav-item w-100">
+                <a class="nav-link" href="{{ route('index_calender') }}">
+                    <i class="fe fe-calendar fe-16"></i>
+                    <span class="ml-3 item-text">Calendar</span>
+                </a>
+            </li>
             <li class="nav-item w-100">
                 <a class="nav-link" href="{{ route('index_users') }}">
                     <i class="fe fe-users fe-16"></i>
@@ -64,6 +79,12 @@
                 <a class="nav-link" href="{{ route('Page_Setting') }}">
                     <i class="fe fe-settings fe-16"></i>
                     <span class="ml-3 item-text">Settings Apps</span>
+                </a>
+            </li>
+            <li class="nav-item w-100">
+                <a class="nav-link" href="{{ route('index_logimport') }}">
+                    <i class="fe fe-database fe-16"></i>
+                    <span class="ml-3 item-text">Log Import</span>
                 </a>
             </li>
         </ul>

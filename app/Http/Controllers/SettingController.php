@@ -9,6 +9,7 @@ use App\Models\Department;
 use App\Models\Disciplin;
 use App\Models\Division;
 use App\Models\Employee;
+use App\Models\LogImport;
 use App\Models\Position;
 use App\Models\Project;
 use App\Models\Role;
@@ -18,15 +19,19 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class SettingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $pagination = 20;
+        $disciplin = Disciplin::search($request->search)->paginate($pagination);
+        $activity = Activity::search($request->search)->paginate($pagination);
+        $position = Position::search($request->search)->paginate($pagination);
         return view('settings', [
             'title' => 'Settings',
             'division' => Division::all(),
             'department' => Department::all(),
-            'disciplin' => Disciplin::all(),
-            'activity' => Activity::all(),
-            'position' => Position::all(),
+            'disciplin' => $disciplin,
+            'activity' => $activity,
+            'position' =>  $position,
             'listproject' => Project::all(),
             'employee' => Employee::all(),
             'users' => User::all(),
@@ -38,6 +43,7 @@ class SettingController extends Controller
     // Resource user
     public function index_users()
     {
+
         return view('page_user', [
             'title' => 'Data User Employee',
             'users' => User::all(),
@@ -129,8 +135,8 @@ class SettingController extends Controller
         $request->validate([
             'disciplin_name' => 'required',
             'id_division' => 'required',
-            'assignment' => 'required',
-            'assignment_date' => 'required|date',
+            'assignment' =>  'nullable|',
+            'assignment_date' => 'nullable|date',
         ]);
         $disciplin->update([
             'disciplin_name' => $request->disciplin_name,
@@ -261,6 +267,23 @@ class SettingController extends Controller
         }
     }
     // End Resource Activity
+    //============================================================
+    //============================================================
+    // Resource LogImport
+    public function index_logimport(Request $request)
+    {
+        $pagination  = 10;
+        $logimport = LogImport::when($request->keyword, function ($query) use ($request) {
+            $query->where('source_table', 'like', "%{$request->agenda}%");
+        })->orderBy('created_at', 'desc')->paginate($pagination);
+
+        return view('page_logimport', [
+            'title' => 'Log Import',
+            'logimport' => $logimport,
+
+        ]);
+    }
+    // End Resource LogImport
     //============================================================
     //============================================================
 }

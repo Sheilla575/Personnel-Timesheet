@@ -67,7 +67,7 @@ class Employee extends Authenticatable
         return $this->belongsTo(Role::class, 'level_roles', 'id');
     }
 
-    public function team()
+    public function teamproject()
     {
         return $this->hasMany(TeamProject::class, 'id_employee', 'id');
     }

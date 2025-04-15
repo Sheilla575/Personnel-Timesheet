@@ -29,9 +29,9 @@ class AuthController extends Controller
             if ($user->role->level_roles == 1) {
                 return redirect()->intended('/settings-system');
             } elseif ($user->role->level_roles == 2) {
-                return redirect()->intended('/all-project');
+                return redirect()->route('listproject');
             } elseif ($user->role->level_roles == 3) {
-                return redirect()->intended('/form-timesheet');
+                return redirect()->route('worksheet');
             }
         }
 
@@ -40,9 +40,9 @@ class AuthController extends Controller
             $employee = Auth::guard('employee')->user();
 
             if ($employee->role->level_roles == 3) {
-                return redirect()->intended('/form-timesheet');
+                return redirect()->route('worksheet');
             } elseif ($employee->role->level_roles == 2) {
-                return redirect()->intended('/all-project');
+                return redirect()->route('listproject');
             } elseif ($user->role->level_roles == 1) {
                 return redirect()->intended('/settings-system');
             }
@@ -50,6 +50,11 @@ class AuthController extends Controller
 
 
         return back()->withErrors(['login' => 'Email atau password salah!']);
+    }
+
+    public function auth_aksses()
+    {
+        return view('page_auth');
     }
 
 
@@ -62,7 +67,7 @@ class AuthController extends Controller
 
         request()->session()->invalidate();
         request()->session()->regenerateToken();
-        Artisan::call('route:clear');
+
         FacadesSession::flush();
         return redirect('/');
     }

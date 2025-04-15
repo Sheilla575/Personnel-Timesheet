@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\View;
 
 class Disciplin extends Model
 {
@@ -30,6 +31,16 @@ class Disciplin extends Model
         });
     }
 
+    public function scopeSearch($query, $term)
+    {
+        return $query->when($term, function ($q) use ($term) {
+            $q->where('disciplin_name', 'like', '%' . $term . '%')
+                ->orWhere('id', 'like', '%' . $term . '%')
+                ->orWhere('id_division', 'like', '%' . $term . '%')
+                ->orWhere('assignment', 'like', '%' . $term . '%');
+        });
+    }
+
     public function division()
     {
         return $this->belongsTo(Division::class, 'id_division', 'id');
@@ -43,5 +54,10 @@ class Disciplin extends Model
     public function assign()
     {
         return $this->belongsTo(User::class, 'email', 'email');
+    }
+
+    public function timesheet()
+    {
+        return $this->hasMany(Timesheet::class, 'code_project', 'id'); // the code_project in timesheet is the id in disciplin
     }
 }

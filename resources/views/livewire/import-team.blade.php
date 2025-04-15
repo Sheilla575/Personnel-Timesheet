@@ -1,4 +1,7 @@
 <div>
+    @if (session()->has('success'))
+    <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
     <form wire:submit.prevent="preview">
         <div class="form-group mb-3">
             <div class="custom-file">
@@ -13,29 +16,31 @@
         </div>
     </form>
 
-    @if ($previewData)
+    @if($previewData)
     <table class="table table-striped table-hover">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>ID Discipline</th>
-                <th>Name Activity</th>
+                <th>Code Project</th>
+                <th>Email</th>
+                <th>Status</th>
                 <th>Error</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($previewData as $i => $row)
-            <tr @if(isset($validationErrors[$i])) style="background-color: #ffe0e0;" @endif>
-                <td>{{ $row['code_activity'] ?? '-' }}</td>
-                <td>{{ $row['id_discipline'] ?? '-' }}</td>
-                <td>{{ $row['name_activity'] ?? '-' }}</td>
+            @foreach ($previewData as $row)
+            <tr class="{{ !$row['valid'] ? 'table-danger' : '' }}">
+                <td>{{ $row['code_project'] ?? '-' }}</td>
+                <td>{{ $row['email'] ?? '-' }}</td>
+                <td>{{ $row['status'] ?? '-' }}</td>
                 <td>
-                    @if (isset($validationErrors[$i]))
+                    @if(!$row['valid'])
                     <ul>
-                        @foreach ($validationErrors[$i] as $error)
+                        @foreach ($row['errors'] as $error)
                         <li class="text-danger">{{ $error }}</li>
                         @endforeach
                     </ul>
+                    @else
+                    <span class="text-success">Valid</span>
                     @endif
                 </td>
             </tr>

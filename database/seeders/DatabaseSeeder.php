@@ -13,6 +13,7 @@ use App\Models\Position;
 use App\Models\Project;
 use App\Models\Role;
 use App\Models\TeamProject;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 use function Laravel\Prompts\password;
@@ -278,6 +279,19 @@ class DatabaseSeeder extends Seeder
             ];
         foreach ($activity as $a) {
             Activity::create($a);
+        }
+
+        $user = [
+            [
+                'name' => 'Sheila Rizky Saputri',
+                'email' => 'sheilla@admin.com',
+                'password' => bcrypt('123123'),
+                'level_roles' => '1',
+                'type_user' => 'HO',
+            ]
+        ];
+        foreach ($user as $u) {
+            User::create($u);
         }
 
         $employee =

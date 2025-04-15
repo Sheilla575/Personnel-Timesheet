@@ -17,6 +17,15 @@ class Activity extends Model
         'name_activity',
     ];
 
+    public function scopeSearch($query, $term)
+    {
+        return $query->when($term, function ($q) use ($term) {
+            $q->where('id', 'like', '%' . $term . '%')
+                ->orWhere('id_disciplin', 'like', '%' . $term . '%')
+                ->orWhere('name_activity', 'like', '%' . $term . '%');
+        });
+    }
+
     public function disciplin()
     {
         return $this->belongsTo(Disciplin::class, 'id_disciplin', 'id');

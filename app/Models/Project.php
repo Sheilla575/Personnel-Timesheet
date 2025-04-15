@@ -37,7 +37,7 @@ class Project extends Model
         return $this->hasOne(Employee::class, 'id', 'project_manager');
     }
 
-    public function team()
+    public function teamproject()
     {
         return $this->hasMany(TeamProject::class, 'code_project', 'code_project');
     }

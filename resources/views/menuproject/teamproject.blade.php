@@ -7,7 +7,7 @@
         <a class="ml-2 close" href=""><span class="fe fe-edit fe-16 mr-2"></span></a>
     </div>
 </div>
-<strong>Team Personil Head Office<p class="text-muted">you have {{ $project->team->count('id_employee') }} personil for this project</p> </strong>
+<strong>Team Personil Head Office<p class="text-muted">you have {{ $project->teamproject->count('code_project') }} personil for this project</p> </strong>
 <div class="col-md-12 border-top">
     <div class="file-container">
         <div class="file-panel">
@@ -18,6 +18,7 @@
                             <th></th>
                             <th class="w-50">Name</th>
                             <th>Discipline/Position</th>
+                            <th>Plan Manhours</th>
                             <th>Last Update</th>
                             <th></th>
                         </tr>
@@ -37,6 +38,7 @@
                                 </div>
                             </th>
                             <td class="text-muted">{{ $t->employee->position->positions_name }}</td>
+                            <td></td>
                             <td class="text-muted">Mar 17, 2020</td>
                             <td>
                                 <div class="file-action">

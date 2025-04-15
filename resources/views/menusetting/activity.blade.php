@@ -1,5 +1,5 @@
 <h5 class="mb-0 mt-5">Create New Activity</h5>
-<div class="row col-12 col-lg-12 col-xl-8">
+<div class="row col-12 col-lg-12 col-xl-12">
     <form action="{{ route('store_Activity') }}" method="POST">
         @csrf
         <div class="form-row">
@@ -66,23 +66,27 @@
             <div class="col">
                 <form class="form-inline">
                     <div class="form-row">
-                        <div class="form-group col-md-12">
-                            <input type="text" class="form-control" id="search" value="" placeholder="Search Discipline..." />
-                        </div>
+                        <form method="GET" action="{{ route('Page_Setting') }}">
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control" name="search" id="search" value="{{ request('search') }}" placeholder="Search Activity" />
+                            </div>
+                        </form>
                     </div>
                 </form>
             </div>
             <div class="col ml-auto">
                 <div class="dropdown float-right">
-                    <div class="form-group col-md-12">
-                        <label class="sr-only" for="inlineFormCustomSelectPref">Filter Head of:</label>
-                        <select class="custom-select select2" id="inlineFormCustomSelectPref">
-                            <option selected>Head of Discipline Choose...</option>
-                            @foreach($disciplin as $d)
-                            <option value="{{ $d->id }}">{{ $d->id }} - {{ $d->disciplin_name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                    <form method="GET" action="{{ route('Page_Setting') }}">
+                        <div class="form-group col-md-12">
+                            <label class="sr-only" for="inlineFormCustomSelectPref">Filter Head of:</label>
+                            <select class="custom-select select2" name="search" id="search" id="inlineFormCustomSelectPref" value="{{ request('search') }}">
+                                <option selected>Head of Discipline Choose...</option>
+                                @foreach($disciplin as $d)
+                                <option value="{{ request('search') }}">{{ $d->id }} - {{ $d->disciplin_name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -102,7 +106,7 @@
                     </th>
                     <th>Code</th>
                     <th>Disciplines</th>
-                    <th>Code</th>
+                    <th class="">Code</th>
                     <th class="w-50">Activity</th>
                     <th>Action</th>
                 </tr>
@@ -194,6 +198,7 @@
                 @endforeach
             </tbody>
         </table>
+        {{ $activity->links('partials.pagination') }}
     </div>
 </div>
 

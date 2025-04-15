@@ -26,8 +26,8 @@ class StoreTimesheetRequest extends FormRequest
             'id_employee' => 'required',
             'week'   => 'required',
             'year'          => 'required|integer',
-            'activities.*.code_project'  => 'required|string',
-            'activities.*.code_activity' => 'required|string',
+            'activities.*.code_project' => 'required|exists:projects,code_project',
+            'activities.*.code_activity' => 'required|exists:activities,id',
             // 'activities.*.*.date'   => 'required|date',
             'activities.*.*.man_hours' => 'nullable|',
             'activities.*.*.note'   => 'nullable|string|max:255',
@@ -58,6 +58,10 @@ class StoreTimesheetRequest extends FormRequest
                 // } else {
                 //     $projectActivityMap[$project][] = $activity;
                 // }
+
+                if (!$project || !$activity) {
+                    $validator->errors()->add("activities.{$rowId}.code_project", "Project atau Activity tidak boleh kosong.");
+                }
 
                 if (in_array($comboKey, $combinationCheck)) {
                     $validator->errors()->add("activities.{$rowId}.code_activity", "Aktivitas untuk proyek ini sudah diisi.");

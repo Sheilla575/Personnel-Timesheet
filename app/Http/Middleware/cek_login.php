@@ -28,11 +28,12 @@ class cek_login
         //     return redirect('/');
         // }
         $rolesArray = array_map('intval', explode(',', $roles));
+
         $user = Auth::user();
 
         if ($user || in_array($user->level_roles, $rolesArray)) {
             return $next($request);
         }
-        return redirect('/')->with('error', "Anda Tidak Memiliki Akses");
+        return redirect()->route('auth_akses')->with('error', "Anda Tidak Memiliki Akses");
     }
 }

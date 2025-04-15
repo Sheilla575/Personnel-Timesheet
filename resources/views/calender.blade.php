@@ -223,7 +223,7 @@
                                         <div class="form-check mb-2">
                                             <input class="form-check-input" type="checkbox" name="is_editable" value="1" id="is_editable" />
                                             <label class="form-check-label" for="is_editable">
-                                                Disable Date - Timesheet
+                                                Enable - Timesheet
                                             </label>
                                         </div>
                                     </div>

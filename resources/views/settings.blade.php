@@ -23,35 +23,35 @@
             <div class="my-4">
                 <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link nav-1 active" id="division-tab" data-toggle="tab" href="#division" role="tab" aria-controls="division" aria-selected="true">Division & Department</a>
+                        <a class="nav-link tab-link nav-1 show" id="division-tab" data-toggle="tab" href="#division" role="tab" aria-controls="division" aria-selected="true">Division & Department</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link nav-1" id="discipline-tab" data-toggle="tab" href="#discipline" role="tab" aria-controls="discipline" aria-selected="false">Discipline</a>
+                        <a class="nav-link tab-link nav-1 show" id="discipline-tab" data-toggle="tab" href="#discipline" role="tab" aria-controls="discipline" aria-selected="false">Discipline</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link nav-1" id="activity-tab" data-toggle="tab" href="#activity" role="tab" aria-controls="activity" aria-selected="false">Activity Settings</a>
+                        <a class="nav-link tab-link nav-1 show" id="activity-tab" data-toggle="tab" href="#activity" role="tab" aria-controls="activity" aria-selected="false">Activity Settings</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link nav-1" id="project-tab" data-toggle="tab" href="#project" role="tab" aria-controls="project" aria-selected="false">Project</a>
+                        <a class="nav-link tab-link nav-1 show" id="project-tab" data-toggle="tab" href="#project" role="tab" aria-controls="project" aria-selected="false">Project</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link nav-1" id="employee-tab" data-toggle="tab" href="#employee" role="tab" aria-controls="employee" aria-selected="false">Roles Aksess</a>
+                        <a class="nav-link tab-link nav-1 show" id="employee-tab" data-toggle="tab" href="#employee" role="tab" aria-controls="employee" aria-selected="false">Roles Aksess</a>
                     </li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade show active" id="division" role="tabpanel" aria-labelledby="division-tab">
+                    <div class="tab-pane fade show" id="division" role="tabpanel" aria-labelledby="division-tab">
                         @include('menusetting.division')
                     </div>
-                    <div class="tab-pane fade" id="discipline" role="tabpanel" aria-labelledby="discipline-tab">
+                    <div class="tab-pane fade show" id="discipline" role="tabpanel" aria-labelledby="discipline-tab">
                         @include('menusetting.discipline')
                     </div>
-                    <div class="tab-pane fade" id="activity" role="tabpanel" aria-labelledby="activity-tab">
+                    <div class="tab-pane fade show" id="activity" role="tabpanel" aria-labelledby="activity-tab">
                         @include('menusetting.activity')
                     </div>
-                    <div class="tab-pane fade" id="project" role="tabpanel" aria-labelledby="project-tab">
+                    <div class="tab-pane fade show" id="project" role="tabpanel" aria-labelledby="project-tab">
                         @include('menusetting.project')
                     </div>
-                    <div class="tab-pane fade" id="employee" role="tabpanel" aria-labelledby="employee-tab">
+                    <div class="tab-pane fade show" id="employee" role="tabpanel" aria-labelledby="employee-tab">
 
                     </div>
                 </div> <!-- /.card-body -->
@@ -146,5 +146,45 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const activeTab = localStorage.getItem('activeTab');
+
+        if (activeTab) {
+            document.querySelectorAll('.tab-link').forEach(link => link.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+
+            const link = document.querySelector(`a[href="${activeTab}"]`);
+            const pane = document.querySelector(activeTab);
+
+            if (link && pane) {
+                link.classList.add('active');
+                pane.classList.add('active');
+            }
+        } else {
+            // Aktifkan default jika tidak ada localStorage
+            document.querySelector('.tab-link').classList.add('active');
+            document.querySelector('.tab-pane').classList.add('active');
+        }
+
+        // Event ketika tab diklik
+        document.querySelectorAll('.tab-link').forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                document.querySelectorAll('.tab-link').forEach(link => link.classList.remove('active'));
+                document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+
+                const target = document.querySelector(this.getAttribute('href'));
+                this.classList.add('active');
+                target.classList.add('active');
+
+                // Simpan ke localStorage
+                localStorage.setItem('activeTab', this.getAttribute('href'));
+            });
+        });
+    });
+</script>
+
 
 @endsection

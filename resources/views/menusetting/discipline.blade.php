@@ -8,9 +8,11 @@
             <div class="col">
                 <form class="form-inline">
                     <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <input type="text" class="form-control" id="search" value="" placeholder="Search Discipline..." />
-                        </div>
+                        <form method="GET" action="{{ route('Page_Setting') }}">
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control" name="search" id="search" value="{{ request('search') }}" placeholder="Search Position" />
+                            </div>
+                        </form>
                         <div class="form-group col-md-6">
                             <label class="sr-only" for="inlineFormCustomSelectPref">Head Of</label>
                             <select class="custom-select select2" id="inlineFormCustomSelectPref">
@@ -139,26 +141,8 @@
                 </div>
                 @endforeach
             </tbody>
+            {{ $position->links('partials.pagination') }}
         </table>
-        <nav aria-label="Table Paging" class="mb-0 text-muted">
-            <ul class="pagination justify-content-end mb-0">
-                <li class="page-item">
-                    <a class="page-link" href="#">Previous</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#">1</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#">2</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#">3</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#">Next</a>
-                </li>
-            </ul>
-        </nav>
     </div>
 </div>
 

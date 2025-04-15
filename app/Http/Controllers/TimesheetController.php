@@ -6,10 +6,12 @@ use App\Http\Requests\StoreTimesheetRequest;
 use App\Models\Activity;
 use App\Models\Calendar;
 use App\Models\Disciplin;
+use App\Models\Employee;
 use App\Models\Project;
 use App\Models\TeamProject;
 use App\Models\Timesheet;
 use App\Models\TimesheetActivity;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -19,19 +21,35 @@ class TimesheetController extends Controller
     //
     public function workSheet()
     {
+        // $timesheet = Timesheet::join('timesheet_activities', 'timesheets.id', '=', 'timesheet_activities.id_timesheet')
+        // ->where('timesheets.year', $year)
+        // ->where('timesheets.week', $weekNumber)
+        // ->where('timesheets.id_employee', $id_employee)
+        // ->get(['timesheets.*', 'timesheet_activities.*']);
+        $user = Auth::guard('employee')->user();
         $projetUser = TeamProject::where('id_employee', user()->id)->get();
-        $projetPM = Project::where('project_manager', user()->id)->get();
+        $projetPM = Project::all();
         $timesheet = Timesheet::where('id_employee', user()->id)->get();
-        $activity = Activity::all();
-        $disciplin = Disciplin::all();
+        $activity = Activity::join('disciplins', 'activities.id_disciplin', '=', 'disciplins.id')
+            ->join('positions', 'disciplins.id', '=', 'positions.id_disciplin')
+            ->where('positions.id',  user()->id_position)
+            ->get([
+                'activities.id as activity_id',
+                'activities.name_activity as name_activity',
+                'disciplins.id as disciplin_id',
+                'positions.id as position_id',
+            ]);
+        $disciplin = Disciplin::join('positions', 'disciplins.id', '=', 'positions.id_disciplin')
+            ->where('positions.id',  user()->id_position)
+            ->get(['disciplins.*', 'positions.*']);
         return view('sheet', [
             'calendars' => Calendar::all(),
             'timesheet' => Timesheet::all(),
             'timesheetActivity' => TimesheetActivity::all(),
             'projetUser' => $projetUser,
             'projetPM' => $projetPM,
-            'activity' => Activity::all(),
-            'disciplin' => Disciplin::all(),
+            'activity' => $activity,
+            'disciplin' =>  $disciplin,
             'listproject' => Project::all()
         ]); // return view('timesheet/work-sheet');
 
@@ -58,7 +76,7 @@ class TimesheetController extends Controller
         $weekNumber = $request->input('week_number');
         $year = $request->input('year', date('Y'));
         // $id_employee = Auth::guard('employee')->id();
-        $id_employee = 'EP008';
+        $id_employee = user()->id;
 
         $weekDates = Calendar::getWeekDates($weekNumber, $year,);
 
@@ -126,7 +144,7 @@ class TimesheetController extends Controller
     }
 
 
-    public function draft_timesheet(Request $request) //StoreTimesheetRequest
+    public function draft_timesheet(StoreTimesheetRequest $request) //StoreTimesheetRequest
     {
         DB::beginTransaction();
 
@@ -181,16 +199,18 @@ class TimesheetController extends Controller
                 }
             }
             DB::commit();
-            return response()->json([
-                'success' => true,
-                'message' => 'Timesheet created successfully',
-            ]);
+            return redirect()->back()->with('success', 'Timesheet created successfully');
+            // return response()->json([
+            //     'success' => true,
+            //     'message' => 'Timesheet created successfully',
+            // ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 500);
+            return redirect()->back()->with('error',  $e->getMessage());
+            // return response()->json([
+            //     'success' => false,
+            //     'message' => $e->getMessage(),
+            // ], 500);
         }
     }
 

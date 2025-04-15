@@ -34,16 +34,23 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-11">
+                <div class="col-md-11" style="overflow-x: auto; width: 100%;">
                     <!-- table -->
                     <style>
                         .frozen-column {
-                            min-width: max-content;
+                            min-width: 255px;
                             /* Lebar kolom pertama */
                             position: sticky;
                             left: 0;
                             z-index: 999;
                             border-right: 1px solid #ddd;
+                        }
+
+                        div .freeze-bottom {
+                            min-width: 255px;
+                            position: sticky;
+                            left: 0;
+                            z-index: 999;
                         }
 
                         th,
@@ -63,134 +70,11 @@
                         }
                     </style>
 
-                    <style>
-                        .texarea {
-                            width: 120px;
-                            background-color: #555;
-                            color: #fff;
-                            text-align: center;
-                            border-radius: 6px;
-                            padding: 5px 0;
-                            position: absolute;
-                            z-index: 10;
-                        }
 
-                        .tooltip {
-                            position: relative;
-                            display: inline-block;
-                            border-bottom: 1px dotted black;
-                        }
-
-                        .tooltip .tooltiptext {
-                            visibility: hidden;
-                            width: 120px;
-                            background-color: #555;
-                            color: #fff;
-                            text-align: center;
-                            border-radius: 6px;
-                            padding: 5px 0;
-                            position: absolute;
-                            z-index: 1;
-                            bottom: 125%;
-                            left: 50%;
-                            margin-left: -60px;
-                            opacity: 0;
-                            transition: opacity 0.3s;
-                        }
-
-                        .tooltip .tooltiptext::after {
-                            content: "";
-                            position: absolute;
-                            top: 100%;
-                            left: 50%;
-                            margin-left: -5px;
-                            border-width: 5px;
-                            border-style: solid;
-                            border-color: #555 transparent transparent transparent;
-                        }
-
-                        .tooltip:hover .tooltiptext {
-                            visibility: visible;
-                            opacity: 1;
-                        }
-                    </style>
                     <form method="POST" action="{{ route('draft_timesheet') }}" enctype="multipart/form-data">
                         @csrf
                         <table class="table table-borderless table-striped" id="timesheetTable"></table>
                     </form>
-                    <table class="table table-borderless table-striped">
-                        <thead>
-                            <tr id="days-header">
-                                <th class="frozen-column text-right"><button type="button" class="btn mb-2 btn-light btn-sm mt-3"><span class="fe fe-plus-circle fe-16 text-primary"><span></button></th>
-                                <th class="frozen-column">Project</th>
-                                <th></th>
-                                <th class="w-25">Activity</th>
-                                <th class="days-column"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($timesheet->where('id_employee', user()->id) as $t)
-                            <tr>
-                                <td class="frozen-column"><a class="ml-2 close" href=""><span class="fe fe-x-circle fe-16 mr-2"></span></a></td>
-                                <td class="frozen-column text-center fe-12" colspan="2">
-                                    <select class="form-control form-control-sm select2 bg-transparent border-0 text-center" title="Judul Popover">
-                                        <optgroup label="Select Project">
-                                            <option value="">{{ $t->code_project }}</option>
-                                            @if (user()->role->level_role == 2)
-                                            @foreach ($projetPM as $p)
-                                            <option value="{{ $p->code_project }}">{{ $p->code_project }}</option>
-                                            @endforeach
-                                            @else
-                                            @foreach ($projetUser as $p)
-                                            <option value="{{ $p->code_project }}">{{ $p->code_project }}</option>
-                                            @endforeach
-                                            @endif
-                                        </optgroup>
-                                    </select>
-                                </td>
-                                <td scope="col">
-                                    <select class='form-control form-control-sm mr-sm-2 bg-transparent border-0 text-muted select2 ' type='search' style="width: max-content;">
-                                        <optgroup label="Select Project">
-                                            <option value="">{{ $t->code_activity }}</option>
-                                            <option>IT - Network monitoring and troubleshoot</option>
-                                            <option>IT - Network monitoring and troubleshoot</option>
-                                            <option>IT - Network monitoring and troubleshoot</option>
-                                            <option>IT - Network monitoring and troubleshoot</option>
-                                        </optgroup>
-                                        </optgroup>
-                                    </select>
-                                </td>
-                                @foreach($timesheetActivity->where('id_timesheet', $t->id) as $a)
-                                <td class="text-center">
-                                    <input class="form-control form-control-sm text-center"
-                                        type="text" value="00:00"
-                                        pattern="^([0-9]{1,2}):([0-5][0-9])$" required>
-                                </td>
-                                @endforeach
-                            </tr>
-                            @endforeach
-                        </tbody>
-
-                        <thead>
-                            <tr>
-                                <th class="frozen-column " colspan="3">
-                                    <div class="d-flex justify-content-between">
-                                        <button type="button" class="btn mb-2 btn-success text-white ml-2 mr-2" style="width: 75px;box-shadow: 6px 8px 9px rgba(203, 216, 227, 0.5);">Save</button>
-                                        <button type="button" class="btn mb-2 btn-secondary text-white ml-2 mr-2" style="width: 95px; box-shadow: 6px 8px 9px rgba(203, 216, 227, 0.5);"><span class="fe fe-check fe-22 mr-2"></span>submit</button>
-                                    </div>
-                                </th>
-                                <th class="frozen-column"></th>
-                                <th class="days-column" style="position: static;">00h:00m</th>
-                                <th class="days-column">00h:00m</th>
-                                <th class="days-column">00h:00m</th>
-                                <th class="days-column">00h:00m</th>
-                                <th class="days-column">00h:00m</th>
-                                <th class="days-column">00h:00m</th>
-                                <th class="days-column">00h:00m</th>
-                                <th>00h:00m</th>
-                            </tr>
-                        </thead>
-                    </table>
 
                 </div> <!-- .col -->
             </div> <!-- .row -->
@@ -505,11 +389,10 @@
                         <input type="hidden" name="week" value='${weekNumber}'>
                         <input type="hidden" name="year" value='${year}'>
                             <thead>
-                                <tr>
-                                     <th class="frozen-column text-right"><button type="button" onclick="addNewRow()" class="btn mb-2 btn-light btn-sm mt-3"><span class="fe fe-plus-circle fe-16 text-primary"><span></button></th>
+                                <tr id="days-header">
+                                    <th class="text-center"><button type="button" onclick="addNewRow()" class="btn mb-2 btn-light btn-sm mt-3"><span class="fe fe-plus-circle fe-16 text-primary"><span></button></th>
                                     <th class="frozen-column w-25">Project</th>
-                                    <th></th>
-                                    <th class="w-25">Activity</th>
+                                    <th>Activity</th>
                     `;
 
                     // **Menambahkan header tanggal**
@@ -525,17 +408,10 @@
                     });
 
                     tableHTML += `</tr></thead><tbody id="timesheetBody"></tbody></table>
-                       <thead>
-                            <tr>
-                                <th class="frozen-column" colspan="2">
-                                    <div class="d-flex">
-                                        <button type="submit" name="action" value="draft" class="btn mb-2 btn-secondary text-white mr-2" style="width: 75px;box-shadow: 6px 8px 9px rgba(203, 216, 227, 0.5);">Save</button>
-                                        <button type="submit" name="action" value="pending"class="btn mb-2 btn-success text-white ml-2" style="width: 95px; box-shadow: 6px 8px 9px rgba(203, 216, 227, 0.5);"><span class="fe fe-check fe-22 mr-2"></span>submit</button>
-                                    </div>
-                                </th>
-                                <th class="frozen-column" colspan="9"></th>
-                            </tr
-                        </thead>
+                    <div class="d-flex justify-content-between mt-5 freeze-bottom">
+                        <button type="submit" name="action" value="draft" class="btn mb-2 btn-secondary text-white mr-2" style="width: 75px;box-shadow: 6px 8px 9px rgba(203, 216, 227, 0.5);">Save</button>
+                        <button type="submit" name="action" value="pending"class="btn mb-2 btn-success text-white ml-2" style="width: 95px; box-shadow: 6px 8px 9px rgba(203, 216, 227, 0.5);"><span class="fe fe-check fe-22 mr-2"></span>submit</button>
+                    </div>
                     `;
 
                     timesheetTable.innerHTML = tableHTML;
@@ -573,26 +449,34 @@
             let rowId = `row-${Date.now()}`;
             let selectedProject = activity?.code_project ?? '';
             let selectedActivity = activity?.code_activity ?? '';
+            let status = activity?.status ?? '';
             let detailDates = activity?.details ?? {};
 
             if (isLocked == 'new') {
                 rowHTML = `
                     <tr id="${rowId}">
-                        <td>
-                            <a class="ml-2 close" onclick="removeRow('${rowId}')"><span class="fe fe-x-circle fe-16 mr-2"></span></a>
+                        <td class="text-center">
+                            <a class="ml-2" onclick="removeRow('${rowId}')"><span class="fe fe-x-circle fe-16"></span></a>
                         </td>
-                        <td class="frozen-column" colspan="2">
+                        <td class="frozen-column w-25">
                         <select class="form-control form-control-sm select2 bg-transparent border-0" title="Judul Popover" name="activities[${rowId}][code_project]">
-                            <option>Select Project</option>    
                             <optgroup label="Select Project">
-                                @if (user()->role->level_role == 2)
-                                @foreach ($projetPM as $p)
-                                <option value="{{ $p->code_project }}">{{ $p->code_project }}</option>
-                                @endforeach
+                                @if (user()->id_position == "PM")
+                                    @if($projetPM->count() <= 0)
+                                        <option value="">No projects available.</option>
+                                    @else
+                                        @foreach ($projetPM->where('project_manager', user()->id ) as $p)
+                                        <option value="{{ $p->code_project }}">{{ $p->code_project }}</option>
+                                        @endforeach
+                                    @endif
                                 @else
-                                @foreach ($projetUser as $p)
-                                <option value="{{ $p->code_project }}">{{ $p->code_project }}</option>
-                                @endforeach
+                                    @if($projetUser->count() <= 0)  
+                                        <option value="">You Don't any of Projet</option>
+                                    @else
+                                        @foreach ($projetUser as $p)
+                                        <option value="{{ $p->code_project }}">{{ $p->code_project }}</option>
+                                        @endforeach
+                                    @endif
                                 @endif
                             </optgroup>
                             
@@ -604,12 +488,15 @@
                         </select>
                         </td>
                         <td>
-                            <select class="form-control form-control-sm mr-sm-2 bg-transparent border-0 text-muted select2" name="activities[${rowId}][code_activity]" style="width: max-content;">
-                             <option>Select Activity</option>        
+                            <select class="form-control form-control-sm mr-sm-2 bg-transparent border-0 text-muted select2" name="activities[${rowId}][code_activity]" style="width: max-content;" >
                             <optgroup label="Select Activity">
-                                    @foreach ($activity as $a)
-                                    <option value="{{ $a->id }}">{{ $a->id }} - {{ $a->name_activity }}</option>
-                                    @endforeach
+                                @if($activity->count() <= 0)
+                                <option>No activities available for adding</option>
+                                @else
+                                @foreach ($activity as $a)
+                                <option value="{{ $a->activity_id }}">{{ $a->position_id }} - {{ $a->name_activity }}</option>
+                                @endforeach
+                                @endif
                                 </optgroup>
                             </select>
                         </td>
@@ -625,14 +512,19 @@
                         // lanjut generate rowHTML sesuai kebutuhan...
                         // let noteId = `Manhours`;
                         if (match.status == 'Draft') {
-                            rowHTML +=
-                                `<td>
-                                <input type="date" name="activities[${rowId}][${noteId}][date]" value='${item.date}' hidden>
-                                <input class="form-control form-control-sm text-center" type="text" value="${item.man_hours}" type="hidden" name="activities[${rowId}][${noteId}][man_hours]" style="width: 60px;"onfocus="showNote('${noteId}')" 
-                                                onblur="hideNote('${noteId}')" 
-                                                oninput="validateWeekHours()">
-                                <textarea id="${noteId}" name="activities[${rowId}][${noteId}][note]" class="form-control note-input mt-2" placeholder="Tambahkan catatan..." style="display: none;"></textarea>
-                                </td>`;
+                            rowHTML += `<td>
+                                <input type="hidden" name="activities[${rowId}][${noteId}][date]" value='${item.date}'>
+                                <input class="form-control form-control-sm text-center manhour-input" type="number" 
+                                    value="${manHours}"
+                                    name="activities[${rowId}][${noteId}][man_hours]" 
+                                    style="width: 60px;" onfocus="showNote('${noteId}')"
+                                    onblur="hideNote('${noteId}')" 
+                                    oninput="validateWeekHours()">
+
+                                <span id="${noteId}-tooltip" class="note-tooltip" style="display: none;">Note :
+                                <textarea id="${noteId}" name="activities[${rowId}][${noteId}][note]" class="form-control note-input mt-2" 
+                                    placeholder="Tambahkan catatan..." style="display: none;"></textarea></span>
+                            </td>`;
                         }
                         if (item.is_editable == '0') {
                             rowHTML +=
@@ -641,14 +533,18 @@
                                 <input class="form-control form-control-sm text-center" type="text" value="${manHours}" type="hidden" name="activities[${rowId}][${noteId}][man_hours]" value="${manHours}" style="width: 60px;" readonly>
                                 </td>`;
                         } else {
-                            rowHTML +=
-                                `<td>
-                                <input type="date" name="activities[${rowId}][${noteId}][date]" value='${item.date}' hidden>
-                                <input class="form-control form-control-sm text-center" type="text" value="${manHours}" type="hidden" name="activities[${rowId}][${noteId}][man_hours]" style="width: 60px;"onfocus="showNote('${noteId}')" 
-                                                onblur="hideNote('${noteId}')" 
-                                                oninput="validateWeekHours()">
-                                <textarea id="${noteId}" name="activities[${rowId}][${noteId}][note]" class="form-control note-input mt-2" placeholder="Tambahkan catatan..." style="display: none;"></textarea>
-                                </td>`;
+                            rowHTML += `<td>
+                                <input type="hidden" name="activities[${rowId}][${noteId}][date]" value='${item.date}'>
+                                <input class="form-control form-control-sm text-center manhour-input" type="number" 
+                                    value="${manHours}"
+                                    name="activities[${rowId}][${noteId}][man_hours]" 
+                                    style="width: 60px;" onfocus="showNote('${noteId}')"
+                                    onblur="hideNote('${noteId}')" 
+                                    oninput="validateWeekHours()">
+                                    <span id="${noteId}-tooltip" class="note-tooltip" style="display: none;">Note :
+                                <textarea id="${noteId}" name="activities[${rowId}][${noteId}][note]" class="form-control note-input mt-2" 
+                                placeholder="Tambahkan catatan..." style="display: none;"></textarea></span>
+                            </td>`;
                         }
                     } else {
                         console.warn('Tanggal tidak ditemukan di item:', item);
@@ -658,14 +554,14 @@
             } else {
                 rowHTML += `
                  <tr id="${rowId}">
-                    <td>
+                    <td class="text-center">
+                        <span class="text-warning">${status}</span>
                     </td>
-                     <td class="frozen-column" colspan="2">
+                     <td class="frozen-column w-25">
                     <select class="form-control form-control-sm select2 bg-transparent border-0" title="Judul Popover" name="activities[${rowId}][code_project]">
                         <optgroup label="Select Project">
-                            
-                            @if (user()->role->level_role == 2)
-                            @foreach ($projetPM as $p)
+                            @if (user()->id_position == "PM")
+                            @foreach ($projetPM->where('project_manager', user()->id ) as $p)
                             <option value="{{ $p->code_project }}" ${selectedProject == "{{ $p->code_project }}" ? 'selected' : ''}>{{ $p->code_project }}</option>
                             @endforeach
                             @else
@@ -683,10 +579,10 @@
                     </select>
                     </td>
                     <td>
-                        <select class="form-control form-control-sm mr-sm-2 bg-transparent border-0 text-muted select2" name="activities[${rowId}][code_activity]" style="width: max-content;">
+                        <select class="form-control form-control-sm mr-sm-2 bg-transparent border-0 text-muted select2" name="activities[${rowId}][code_activity]" style="width: max-content;" >
                             <optgroup label="Select Activity">
-                                @foreach ($activity as $a)
-                                <option value="{{ $a->id }}" ${selectedActivity == "{{ $a->id }}" ? 'selected' : ''}>{{ $a->id }} - {{ $a->name_activity }}</option>
+                               @foreach ($activity as $a)
+                                <option value="{{ $a->activity_id  }}" ${selectedActivity == "{{ $a->activity_id  }}" ? 'selected' : ''}>{{ $a->position_id }} - {{ $a->name_activity }}</option>
                                 @endforeach
                             </optgroup>
                         </select>
@@ -719,12 +615,18 @@
                                 </td>`;
                         } else {
                             rowHTML += `<td>
-                        <input type="date" name="activities[${rowId}][${noteId}][date]" value='${item.date}' hidden>
-                        <input class="form-control form-control-sm text-center" type="text" value="${manHours}" type="hidden" name="activities[${rowId}][${noteId}][man_hours]" style="width: 60px;"onfocus="showNote('${noteId}')" 
-                                        onblur="hideNote('${noteId}')" 
-                                        oninput="validateWeekHours()">
-                        <textarea id="${noteId}" name="activities[${rowId}][${noteId}][note]" class="form-control note-input mt-2" placeholder="Tambahkan catatan..." style="display: none;"></textarea>
-                        </td>`;
+                                <input type="hidden" name="activities[${rowId}][${noteId}][date]" value='${item.date}'>
+                                <input class="form-control form-control-sm text-center manhour-input" type="number" 
+                                    value="${manHours}"
+                                    name="activities[${rowId}][${noteId}][man_hours]" 
+                                    style="width: 60px;" onfocus="showNote('${noteId}')"
+                                    onblur="hideNote('${noteId}')" 
+                                    oninput="validateWeekHours()">
+
+                                <span id="${noteId}-tooltip" class="note-tooltip" style="display: none;">Note :
+                                <textarea id="${noteId}" name="activities[${rowId}][${noteId}][note]" class="form-control note-input mt-2" 
+                                placeholder="Tambahkan catatan..." style="display: none;"></textarea></span>
+                            </td>`;
                         }
                     } else {
                         console.warn('Tanggal tidak ditemukan di item:', item);
@@ -758,17 +660,61 @@
         //     }
         // };
 
-        // **7️⃣ Fungsi untuk menampilkan note saat input manhours diklik**
+        // Fungsi untuk menampilkan tooltip catatan
         window.showNote = function(noteId) {
-            document.getElementById(noteId).style.display = "block";
+            let noteTooltip = document.getElementById(`${noteId}-tooltip`);
+            let noteTextarea = document.getElementById(noteId);
+            if (noteTooltip) {
+                noteTooltip.style.display = "block";
+                noteTextarea.style.display = "block";
+                noteTooltip.style.position = "absolute";
+                noteTooltip.parentElement.style.position = "relative";
+                noteTextarea.parentElement.style.position = "block";
+                noteTextarea.style.width = "150px";
+                // Tambahkan properti untuk mencegah row melebar
+                noteTooltip.style.whiteSpace = "nowrap";
+                noteTooltip.style.overflow = "hidden";
+                noteTooltip.style.textOverflow = "ellipsis";
+                noteTooltip.style.zIndex = "998";
+                noteTooltip.style.background = "white";
+                noteTooltip.style.boxShadow = "0px 4px 6px rgba(0, 0, 0, 0.1)";
+                noteTooltip.style.padding = "5px";
+                noteTooltip.style.borderRadius = "5px";
+                noteTooltip.style.left = "100%";
+                noteTooltip.style.top = "100%";
+                noteTooltip.style.transform = "translateX(-50%)";
+                noteTooltip.style.cursor = "pointer";
+            }
+            // Klik tooltip untuk membuka textarea
+            noteTooltip.onclick = function() {
+                if (noteTooltip) {
+                    noteTextarea.style.display = "block"; // Tampilkan textarea
+                    noteTextarea.focus(); // Fokus ke textarea
+                }
+                if (!noteTooltip) {
+                    noteTooltip.style.display = "none"; // Tampilkan textarea
+                }
+            };
         };
 
-        // **8️⃣ Fungsi untuk menyembunyikan note saat input kehilangan fokus**
-        window.hideNote = function(noteId) {
-            let noteField = document.getElementById(noteId);
-            if (noteField.value.trim() === "") {
-                noteField.style.display = "none";
+        window.hideNote = function(noteId, event) {
+            let noteTooltip = document.getElementById(`${noteId}-tooltip`);
+            let noteTextarea = document.getElementById(noteId);
+
+            // Periksa apakah event berasal dari dalam textarea
+            if (event && noteTextarea.contains(event.relatedTarget)) {
+                return; // Jangan sembunyikan jika masih fokus di textarea
             }
+
+            // Sembunyikan hanya jika pengguna mengklik di luar input dan textarea
+            setTimeout(() => {
+                if (noteTextarea && !noteTextarea.matches(":focus")) {
+                    noteTextarea.style.display = "none";
+                    if (noteTooltip) {
+                        noteTooltip.style.display = "none"; // Kembalikan tooltip jika tidak ada input
+                    }
+                }
+            }, 200);
         };
     });
 </script>

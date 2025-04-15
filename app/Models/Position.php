@@ -28,6 +28,15 @@ class Position extends Model
         });
     }
 
+    public function scopeSearch($query, $term)
+    {
+        return $query->when($term, function ($q) use ($term) {
+            $q->where('positions_name', 'like', '%' . $term . '%')
+                ->orWhere('id', 'like', '%' . $term . '%')
+                ->orWhere('id_disciplin', 'like', '%' . $term . '%');
+        });
+    }
+
     public function disciplin()
     {
         return $this->belongsTo(Disciplin::class, 'id_disciplin', 'id');
