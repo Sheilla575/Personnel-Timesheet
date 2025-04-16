@@ -81,279 +81,7 @@
         </div>
     </div> <!-- .row -->
 </div>
-<!-- <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById('week_number').addEventListener("change", function() {
-            let weekValue = this.value;
-            if (!weekValue) return;
 
-            let [year, weekNumber] = weekValue.split("-W"); // Ambil tahun dan week
-            console.log("Year:", year, "Week:", weekNumber); // Debugging
-
-            fetch(`/get-week-calendar?year=${year}&week_number=${weekNumber}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    let headerHTML = `
-                        <th class="frozen-column text-right">
-                            <button type="button" class="btn mb-2 btn-light btn-sm mt-3 add-row-btn">
-                                <span class="fe fe-plus-circle fe-16 text-primary"></span>
-                            </button>
-                        </th>
-                        <th class="frozen-column">Project</th>
-                        <th></th>
-                        <th class="w-25">Activity</th>
-                    `; // Reset header
-                    const formatter = new Intl.DateTimeFormat('en-US', {
-                        day: '2-digit', // 15
-                        month: 'short', // Tue
-                        year: 'numeric' // 2025
-                    });
-                    data.forEach(item => {
-                        let formattedDate = formatter.format(new Date(item.date)); // Format tanggal
-                        headerHTML += `
-                            <th class="text-right">
-                                ${formattedDate}
-                                ${item.is_holiday ? `<br><span class="text-danger ">(Holiday: ${item.description})</span>` : ""}
-                            </th>`;
-                    });
-                    document.getElementById('days-header').innerHTML = headerHTML;
-                })
-                .catch(error => console.error("Fetch error:", error));
-        });
-    });
-</script> -->
-<!-- <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        let weekInput = document.getElementById("week_number");
-        let timesheetBody = document.getElementById("timesheet-body");
-        let addRowButton = document.getElementById("add-row");
-
-        // Fetch data tanggal berdasarkan minggu yang dipilih
-        weekInput.addEventListener("change", function() {
-            let weekValue = this.value;
-            if (!weekValue) return;
-
-            let [year, weekNumber] = weekValue.split("-W");
-
-            fetch(`/get-week-calendar?year=${year}&week_number=${weekNumber}`)
-                .then(response => response.json())
-                .then(data => {
-                    updateTable(data.dates); // Update tabel dengan tanggal baru
-                })
-                .catch(error => console.error("Fetch error:", error));
-        });
-
-        // Fungsi untuk update tabel berdasarkan tanggal
-        function updateTable(dates) {
-            let headerRow = document.getElementById("days-header");
-            headerRow.innerHTML = `<th>Project</th><th>Activity</th>`; // Reset header
-
-            dates.forEach(date => {
-                let formattedDate = new Date(date.date).toLocaleDateString("id-ID", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric"
-                });
-
-                headerRow.innerHTML += `<th class="text-center">${formattedDate}${date.is_holiday ? `<br><span class="text-danger">(Libur)</span>` : ""}</th>`;
-            });
-
-            timesheetBody.innerHTML = ""; // Reset tabel body
-            addRow(); // Tambahkan row pertama
-        }
-
-        // Fungsi untuk menambahkan baris baru
-        function addRow() {
-            let row = document.createElement("tr");
-            row.innerHTML = `
-                    <td><input type="text" name="projects[]" required></td>
-                    <td><input type="text" name="activities[]" required></td>
-                `;
-
-            // Ambil jumlah kolom (tanggal) dari header
-            let dates = document.querySelectorAll("#days-header th").length - 2;
-
-            for (let i = 0; i < dates; i++) {
-                row.innerHTML += `<td><input type="number" name="manhours[]" min="0" max="12" class="manhours" required></td>`;
-            }
-
-            timesheetBody.appendChild(row);
-        }
-
-        // Event Listener tombol tambah row
-        addRowButton.addEventListener("click", addRow);
-    });
-</script> -->
-<!-- <script>
-    function fetchWeekCalendar() {
-        let weekNumber = document.getElementById('week_number').value;
-
-        fetch(`/get-week-calendar?week_number=${weekNumber}`)
-            .then(response => response.json())
-            .then(data => {
-                let tableHTML = '<table border="1"><tr><th>Date</th><th>Agenda</th><th>Project</th><th>Activity</th><th>Man Hours</th></tr>';
-
-                data.forEach(item => {
-                    let disabledAttr = !item.is_editable ? "disabled" : ""; // Disable jika is_editable = false
-                    let manHoursValue = item.default_man_hours !== null ? item.default_man_hours : ""; // Auto-isi man hours jika ada
-
-                    tableHTML += `
-                        <tr>
-                            <td>${item.date} ${item.agenda ? `(Agenda: ${item.agenda})` : ""}</td>
-                            <td>${item.agenda ? item.agenda : "-"}</td>
-                            <td><input type="text" name="activities[][project_code]" ${disabledAttr}></td>
-                            <td><input type="text" name="activities[][activity]" ${disabledAttr}></td>
-                            <td><input type="number" name="activities[][man_hours]" min="0" max="12" value="${manHoursValue}" ${disabledAttr}></td>
-                        </tr>
-                    `;
-                });
-
-                tableHTML += '</table>';
-                document.getElementById('timesheetTable').innerHTML = tableHTML;
-            });
-    }
-</script> -->
-<!-- <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById('week_number').addEventListener("change", function() {
-            let weekValue = this.value;
-            if (!weekValue) return;
-
-            let [year, weekNumber] = weekValue.split("-W"); // Ambil tahun dan week
-            console.log("Year:", year, "Week:", weekNumber); // Debugging
-
-            fetch(`/get-week-calendar?year=${year}&week_number=${weekNumber}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // let tableHTML = `
-                    //     <table border="1">
-                    //         <tr>
-                    //             <th>Project</th>
-                    //             <th>Activity</th>
-                    //             <th>${item.date} (Holiday: ${item.description})</th>
-                    //         </tr>
-                    // `;
-
-                    // data.forEach(item => {
-                    //     let formattedDate = formatter.format(new Date(item.date)); // Format tanggal
-
-                    // });
-
-                    data.forEach(item => {
-                        tableHTML += `
-                         <table border="1">
-                            <th class="text-right">
-                                ${item.date}
-                                ${item.is_holiday ? `<br><span class="text-danger ">(Holiday: ${item.description})</span>` : ""}
-                            </th>`;
-                        if (item.is_holiday) {
-                            // Jika hari libur, otomatis isi 8 jam kerja & disable input
-                            tableHTML += `
-                                <tr>
-                                    <td>${item.date} (Holiday: ${item.description})</td>
-                                    <td colspan="2">Auto-filled</td>
-                                    <td>
-                                        <input type="hidden" name="activities[][man_hours]" value="8">
-                                        8 Hours
-                                    </td>
-                                </tr>
-                            `;
-                        } else {
-                            // Jika bukan hari libur, tampilkan input normal
-                            tableHTML += `
-                                <tr>
-                                    <td>
-                                        <input type="hidden" name="activities[][date]" value="${item.date}">
-                                        ${item.date}
-                                    </td>
-                                    <td><input type="text" name="activities[][project_code]" required></td>
-                                    <td><input type="text" name="activities[][activity]" required></td>
-                                    <td><input type="number" name="activities[][man_hours]" min="0" max="12" required></td>
-                                </tr>
-                            `;
-                        }
-                    });
-
-                    tableHTML += '</table>';
-                    document.getElementById('timesheetTable').innerHTML = tableHTML;
-                })
-                .catch(error => console.error("Fetch error:", error));
-        });
-    });
-</script> -->
-<!-- <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById('week_number').addEventListener("change", function() {
-            let weekValue = this.value;
-            if (!weekValue) return;
-
-            let [year, weekNumber] = weekValue.split("-W"); // Ambil tahun dan week
-            console.log("Year:", year, "Week:", weekNumber); // Debugging
-
-            fetch(`/get-week-calendar?year=${year}&week_number=${weekNumber}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    let tableHTML = `
-                        <table border="1">
-                            <thead>
-                                <tr>
-                                    <th>Project</th>
-                                    <th>Activity</th>
-                    `;
-
-                    // **Menambahkan header tanggal**
-                    data.forEach(item => {
-                        let formattedDate = new Date(item.date).toLocaleDateString("id-ID", {
-                            day: "2-digit",
-                            month: "short",
-                            year: "numeric"
-                        });
-
-                        tableHTML += `<th>${formattedDate} ${item.is_holiday ? `<br><span class="text-danger">(Holiday: ${item.description})</span>` : ""}</th>`;
-                    });
-
-                    tableHTML += `</tr></thead><tbody>`;
-
-                    // **Menambahkan baris input**
-                    tableHTML += `
-                        <tr>
-                            <td><input type="text" name="activities[][project_code]" required></td>
-                            <td><input type="text" name="activities[][activity]" required></td>
-                    `;
-
-                    data.forEach(item => {
-                        if (item.is_holiday) {
-                            // **Hari Libur - Isi otomatis 8 jam, disable input**
-                            tableHTML += `<td><input type="hidden" name="activities[][man_hours]" value="8"> 8 Hours (Auto-filled)</td>`;
-                        } else {
-                            // **Hari kerja normal**
-                            tableHTML += `<td><input type="number" name="activities[][man_hours]" min="0" max="12" required></td>`;
-                        }
-                    });
-
-                    tableHTML += `</tr></tbody></table>`;
-
-                    document.getElementById('timesheetTable').innerHTML = tableHTML;
-                })
-                .catch(error => console.error("Fetch error:", error));
-        });
-    });
-</script> -->
 
 <!-- Fix -->
 <script>
@@ -363,12 +91,23 @@
         const userId = "{{ user()->id }}"; // ini masukin nilai user id dari server
         let weekData = [];
 
+        function isSafariBrowser() {
+            return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        }
+
+        // Jika Safari, fallback ke input text
+        if (isSafariBrowser()) {
+            weekNumberInput.type = "text";
+            weekNumberInput.placeholder = "Format: 2025-W15";
+            console.warn("Browser Safari mendukung input dropdown kalender. gunakan input teks tanpa ada spasi sebagai gantinya.");
+        }
+
         weekNumberInput.addEventListener("change", function() {
             let weekValue = this.value;
             if (!weekValue) return;
 
             let [year, weekNumber] = weekValue.split("-W"); // Ambil tahun dan week
-            console.log("Year:", year, "Week:", weekNumber); // Debugging
+            console.log("Year:", year, "Week:", weekNumber);
 
             fetch(`/get-week-calendar?year=${year}&week_number=${weekNumber}&employee_id=${userId}`)
                 .then(response => {
@@ -718,6 +457,8 @@
         };
     });
 </script>
+
+<!-- version timesheet 01 -->
 <!-- <script>
     document.addEventListener("DOMContentLoaded", function() {
         const weekNumberInput = document.getElementById("week_number");
