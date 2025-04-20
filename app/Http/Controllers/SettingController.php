@@ -25,6 +25,8 @@ class SettingController extends Controller
         $disciplin = Disciplin::search($request->search)->paginate($pagination);
         $activity = Activity::search($request->search)->paginate($pagination);
         $position = Position::search($request->search)->paginate($pagination);
+        $list_project = Project::query()->paginate($pagination);
+        $projectManagers = Employee::where('id_position', 'PM')->get();
         return view('settings', [
             'title' => 'Settings',
             'division' => Division::all(),
@@ -32,10 +34,11 @@ class SettingController extends Controller
             'disciplin' => $disciplin,
             'activity' => $activity,
             'position' =>  $position,
-            'listproject' => Project::all(),
+            'listproject' => $list_project,
             'employee' => Employee::all(),
             'users' => User::all(),
-            'list_discipline' => Disciplin::all()
+            'list_discipline' => Disciplin::all(),
+            'projectManagers' => $projectManagers,
         ]);
     }
 
@@ -286,5 +289,38 @@ class SettingController extends Controller
     }
     // End Resource LogImport
     //============================================================
+    //============================================================
+    // Resource Project
+    public function store_project(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'code_project' => 'required|string|unique:projects,code_project',
+                'name_project' => 'required|string|max:255',
+                'start_date' => 'required|date',
+                'end_date' => 'required|date|after_or_equal:start_date',
+                'project_manager' => 'required|exists:employees,id',
+            ]);
+
+            logger()->info('Project created', ['project' => $validated]);
+
+            Project::create([
+                'code_project' => $validated['code_project'],
+                'name_project' => $validated['name_project'],
+                'start_date' => $validated['start_date'],
+                'end_date' => $validated['end_date'],
+                'total_plan_manhours' => 0, // default value
+                'project_manager' => $validated['project_manager'],
+                'status' => 'Active' // default value
+            ]);
+
+            return redirect()->back()->with('success', 'Project created successfully.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->validator)->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage())->withInput();
+        }
+    }
+    // End Resource Project
     //============================================================
 }

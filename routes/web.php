@@ -60,6 +60,8 @@ Route::middleware(['auth:web', 'cek_login:1'])->group(function () {
     Route::post('/remove_calendar/{id}', [CalendarController::class, 'destroy_calendar'])->name('destroy_calendar');
     //========== Page Log Import ==========\\
     Route::get('/log_import', [SettingController::class, 'index_logimport'])->name('index_logimport');
+    //========== Page Project ==========\\
+    Route::post('/store_project', [SettingController::class, 'store_project'])->name('store_Project');
 });
 
 Route::middleware(['auth:web,employee', 'cek_login:1,2'])->group(function () {
