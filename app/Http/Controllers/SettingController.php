@@ -35,6 +35,7 @@ class SettingController extends Controller
             'listproject' => Project::all(),
             'employee' => Employee::all(),
             'users' => User::all(),
+            'list_discipline' => Disciplin::all()
         ]);
     }
 
@@ -124,7 +125,7 @@ class SettingController extends Controller
     //============================================================\\
     //============================================================
     public function storeDepartment(Request $request) {} //setting division
-    public function storeDivision(Request $request) {} // seting for disciplin 
+    public function storeDivision(Request $request) {} // seting for disciplin
     //============================================================\\
     //============================================================
     // Resource Disciplin
