@@ -37,10 +37,18 @@ Route::middleware(['auth:web', 'cek_login:1'])->group(function () {
     Route::post('/store_user', [SettingController::class, 'store_user'])->name('store_user');
     Route::post('/setup_user/{id}', [SettingController::class, 'update_user'])->name('update_user');
     Route::post('/remove_user/{id}', [SettingController::class, 'destroy_user'])->name('destroy_user');
+
+    Route::put('/setup_employee/{id}', [SettingController::class, 'update_Employee'])->name('update_employee');
+    Route::delete("/remove_employee/{id}", [SettingController::class, 'destroy_Employee'])->name('destroy_employee');
+
     //========== Page Setting ==========\\
     Route::get('/settings-system', [SettingController::class, 'index'])->name('Page_Setting');
+
     //========== Page Discipline ==========\\
     Route::post('/setup_hod/{id}', [SettingController::class, 'assign_HOD'])->name('assign_HOD');
+    Route::post('/store_discipline', [SettingController::class, 'store_Discipline'])->name('store_discipline');
+    Route::post('/destroy_discipline/{id}', [SettingController::class, 'destroy_Discipline'])->name('destroy_discipline');
+
     //========== Page Position ==========\\
     Route::post('/store_position', [SettingController::class, 'store_Position'])->name('store_Position');
     Route::post('/setup_position/{id}', [SettingController::class, 'update_Position'])->name('update_Position');
@@ -60,6 +68,11 @@ Route::middleware(['auth:web', 'cek_login:1'])->group(function () {
     Route::post('/remove_calendar/{id}', [CalendarController::class, 'destroy_calendar'])->name('destroy_calendar');
     //========== Page Log Import ==========\\
     Route::get('/log_import', [SettingController::class, 'index_logimport'])->name('index_logimport');
+
+    //========== Page Dpartment ==========\\
+    Route::post('/store_Department', [SettingController::class, 'store_Department'])->name('store_department');
+    Route::post('/setup_Department/{id}', [SettingController::class, 'update_Department'])->name('update_department');
+    Route::post('/destroy_Department/{id}', [SettingController::class, 'destroy_Department'])->name('destroy_department');
 });
 
 Route::middleware(['auth:web,employee', 'cek_login:1,2'])->group(function () {
