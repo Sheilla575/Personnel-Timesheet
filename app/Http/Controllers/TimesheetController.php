@@ -27,12 +27,11 @@ class TimesheetController extends Controller
         // ->where('timesheets.id_employee', $id_employee)
         // ->get(['timesheets.*', 'timesheet_activities.*']);
         $user = Auth::guard('employee')->user();
-        $projetUser = TeamProject::where('id_employee', user()->id)->get();
+        $projetUser = TeamProject::all();
         $projetPM = Project::all();
         $timesheet = Timesheet::where('id_employee', user()->id)->get();
         $activity = Activity::join('disciplins', 'activities.id_disciplin', '=', 'disciplins.id')
             ->join('positions', 'disciplins.id', '=', 'positions.id_disciplin')
-            ->where('positions.id',  user()->id_position)
             ->get([
                 'activities.id as activity_id',
                 'activities.name_activity as name_activity',
@@ -147,7 +146,6 @@ class TimesheetController extends Controller
     public function draft_timesheet(StoreTimesheetRequest $request) //StoreTimesheetRequest
     {
         DB::beginTransaction();
-
         try {
 
             $id_employee = $request->input('id_employee');
@@ -164,7 +162,7 @@ class TimesheetController extends Controller
                 $timesheetCode = Timesheet::generateTimesheetCode($id_employee, $week, $year);
 
                 $Timesheet = Timesheet::firstOrNew([
-                    'id_employee' => $id_employee,
+                    'id_employee' => "EP001",
                     'week' => $week,
                     'year' => $year,
                     'code_project' => $activities['code_project'],
@@ -206,6 +204,7 @@ class TimesheetController extends Controller
             // ]);
         } catch (\Exception $e) {
             DB::rollBack();
+            dd($e->getMessage());
             return redirect()->back()->with('error',  $e->getMessage());
             // return response()->json([
             //     'success' => false,

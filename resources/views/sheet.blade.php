@@ -123,7 +123,7 @@
 
                     let tableHTML = `
                         <table class="table table-borderless table-striped">
-                        
+
                         <input type="hidden" name="id_employee" value='{{ user()->id }}'>
                         <input type="hidden" name="week" value='${weekNumber}'>
                         <input type="hidden" name="year" value='${year}'>
@@ -209,7 +209,7 @@
                                         @endforeach
                                     @endif
                                 @else
-                                    @if($projetUser->count() <= 0)  
+                                    @if($projetUser->count() <= 0)
                                         <option value="">You Don't any of Projet</option>
                                     @else
                                         @foreach ($projetUser as $p)
@@ -218,7 +218,7 @@
                                     @endif
                                 @endif
                             </optgroup>
-                            
+
                             <optgroup label="Internal Diciplin">
                                 @foreach($disciplin as $d)
                                     <option>{{ $d->disciplin_name }}</option>
@@ -253,15 +253,15 @@
                         if (match.status == 'Draft') {
                             rowHTML += `<td>
                                 <input type="hidden" name="activities[${rowId}][${noteId}][date]" value='${item.date}'>
-                                <input class="form-control form-control-sm text-center manhour-input" type="number" 
+                                <input class="form-control form-control-sm text-center manhour-input" type="number"
                                     value="${manHours}"
-                                    name="activities[${rowId}][${noteId}][man_hours]" 
+                                    name="activities[${rowId}][${noteId}][man_hours]"
                                     style="width: 60px;" onfocus="showNote('${noteId}')"
-                                    onblur="hideNote('${noteId}')" 
+                                    onblur="hideNote('${noteId}')"
                                     oninput="validateWeekHours()">
 
                                 <span id="${noteId}-tooltip" class="note-tooltip" style="display: none;">Note :
-                                <textarea id="${noteId}" name="activities[${rowId}][${noteId}][note]" class="form-control note-input mt-2" 
+                                <textarea id="${noteId}" name="activities[${rowId}][${noteId}][note]" class="form-control note-input mt-2"
                                     placeholder="Tambahkan catatan..." style="display: none;"></textarea></span>
                             </td>`;
                         }
@@ -274,14 +274,14 @@
                         } else {
                             rowHTML += `<td>
                                 <input type="hidden" name="activities[${rowId}][${noteId}][date]" value='${item.date}'>
-                                <input class="form-control form-control-sm text-center manhour-input" type="number" 
+                                <input class="form-control form-control-sm text-center manhour-input" type="number"
                                     value="${manHours}"
-                                    name="activities[${rowId}][${noteId}][man_hours]" 
+                                    name="activities[${rowId}][${noteId}][man_hours]"
                                     style="width: 60px;" onfocus="showNote('${noteId}')"
-                                    onblur="hideNote('${noteId}')" 
+                                    onblur="hideNote('${noteId}')"
                                     oninput="validateWeekHours()">
                                     <span id="${noteId}-tooltip" class="note-tooltip" style="display: none;">Note :
-                                <textarea id="${noteId}" name="activities[${rowId}][${noteId}][note]" class="form-control note-input mt-2" 
+                                <textarea id="${noteId}" name="activities[${rowId}][${noteId}][note]" class="form-control note-input mt-2"
                                 placeholder="Tambahkan catatan..." style="display: none;"></textarea></span>
                             </td>`;
                         }
@@ -309,7 +309,7 @@
                             @endforeach
                             @endif
                         </optgroup>
-                        
+
                         <optgroup label="Internal Diciplin">
                             @foreach($disciplin as $d)
                                 <option>{{ $d->disciplin_name }}</option>
@@ -355,15 +355,15 @@
                         } else {
                             rowHTML += `<td>
                                 <input type="hidden" name="activities[${rowId}][${noteId}][date]" value='${item.date}'>
-                                <input class="form-control form-control-sm text-center manhour-input" type="number" 
+                                <input class="form-control form-control-sm text-center manhour-input" type="number"
                                     value="${manHours}"
-                                    name="activities[${rowId}][${noteId}][man_hours]" 
+                                    name="activities[${rowId}][${noteId}][man_hours]"
                                     style="width: 60px;" onfocus="showNote('${noteId}')"
-                                    onblur="hideNote('${noteId}')" 
+                                    onblur="hideNote('${noteId}')"
                                     oninput="validateWeekHours()">
 
                                 <span id="${noteId}-tooltip" class="note-tooltip" style="display: none;">Note :
-                                <textarea id="${noteId}" name="activities[${rowId}][${noteId}][note]" class="form-control note-input mt-2" 
+                                <textarea id="${noteId}" name="activities[${rowId}][${noteId}][note]" class="form-control note-input mt-2"
                                 placeholder="Tambahkan catatan..." style="display: none;"></textarea></span>
                             </td>`;
                         }
@@ -566,15 +566,15 @@
                 } else {
                     rowHTML += `<td>
                     <input type="hidden" name="activities[${rowId}][${noteId}][date]" value='${item.date}'>
-                    <input class="form-control form-control-sm text-center manhour-input" type="number" 
-                        
-                        name="activities[${rowId}][${noteId}][man_hours]" 
+                    <input class="form-control form-control-sm text-center manhour-input" type="number"
+
+                        name="activities[${rowId}][${noteId}][man_hours]"
                         style="width: 60px;" onfocus="showNote('${noteId}')"
-                        onblur="hideNote('${noteId}')" 
+                        onblur="hideNote('${noteId}')"
                         oninput="validateWeekHours()">
 
                     <span id="${noteId}-tooltip" class="note-tooltip" style="display: none;">Note :
-                    <textarea id="${noteId}" name="activities[${rowId}][${noteId}][note]" class="form-control note-input mt-2" 
+                    <textarea id="${noteId}" name="activities[${rowId}][${noteId}][note]" class="form-control note-input mt-2"
                         placeholder="Tambahkan catatan..." style="display: none;"></textarea></span>
                 </td>`;
                 }

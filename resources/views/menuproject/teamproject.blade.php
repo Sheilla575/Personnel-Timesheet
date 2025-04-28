@@ -11,9 +11,11 @@
 <div class="col-md-12 border-top">
     <div class="file-container">
         <div class="file-panel">
-            <div class="row">
-                <table class="table table-borderless table-striped">
-                    <thead>
+            <form id="timesheetForm" method="POST" action="{{ route('update_timesheet') }}">
+                @csrf
+                <div class="row">
+                    <table class="table table-borderless table-striped">
+                        <thead>
                         <tr>
                             <th></th>
                             <th class="w-50">Name</th>
@@ -22,44 +24,100 @@
                             <th>Last Update</th>
                             <th></th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         @foreach($team as $t)
-                        <tr class="file-list">
-                            <td class="text-center">
-                                <div class="circle circle-sm bg-light">
-                                    <span class="fe fe-user fe-16 text-muted"></span>
-                                </div>
-                                <span class="dot dot-md bg-success mr-1"></span>
-                            </td>
-                            <th scope="row">{{ $t->employee->name }}<br />
-                                <div class="align-items-center">
-                                    <span class="card badge badge-light text-success">Activity <i class="fe fe-external-link fe-12"></i></span>
-                                </div>
-                            </th>
-                            <td class="text-muted">{{ $t->employee->position->positions_name }}</td>
-                            <td></td>
-                            <td class="text-muted">Mar 17, 2020</td>
-                            <td>
-                                <div class="file-action">
-                                    <button type="button" class="btn btn-link dropdown-toggle more-vertical p-0 text-muted mx-auto" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="text-muted sr-only">Action</span>
-                                    </button>
-                                    <div class="dropdown-menu m-2">
-                                        <a class="dropdown-item" href="#"><i class="fe fe-chevrons-right fe-12 mr-4"></i>Move</a>
-                                        <a class="dropdown-item" href="#"><i class="fe fe-copy fe-12 mr-4"></i>Copy</a>
-                                        <a class="dropdown-item" href="#"><i class="fe fe-edit-3 fe-12 mr-4"></i>Rename</a>
-                                        <a class="dropdown-item" href="#"><i class="fe fe-delete fe-12 mr-4"></i>Delete</a>
-                                        <a class="dropdown-item" href="#"><i class="fe fe-share fe-12 mr-4"></i>Share</a>
-                                        <a class="dropdown-item" href="#"><i class="fe fe-download fe-12 mr-4"></i>Download</a>
+                            <tr class="file-list accordion-toggle collapsed" id="c-{{ $t->id_employee }}" data-toggle="collapse" data-parent="#c-{{ $t->id_employee }}" href="#collap-{{ $t->id_employee }}" style="border-bottom: 1px;">
+                                <td class="border-0" style="width: 10px;">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox"
+                                               class="custom-control-input time-sheet-checkbox"
+                                               name="employee_ids[]"
+                                               value="{{ $t->id_employee }}"
+                                               id="emp-{{ $t->id_employee }}" />
+                                        <label class="custom-control-label" for="emp-{{ $t->id_employee }}"></label>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
+                                </td>
+                                <th scope="row">{{ $t->employee->name }}<br />
+                                    <div class="align-items-center">
+                                        <span class="card badge badge-light text-success">Activity <i class="fe fe-external-link fe-12"></i></span>
+                                    </div>
+                                </th>
+                                <td class="text-muted">{{ $t->employee->position->positions_name }}</td>
+                                <td></td>
+                                <td class="text-muted">Mar 17, 2020</td>
+                                <td>
+                                    <div class="file-action">
+                                        <button type="button" class="btn btn-link dropdown-toggle more-vertical p-0 text-muted mx-auto" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="text-muted sr-only">Action</span>
+                                        </button>
+                                        <div class="dropdown-menu m-2">
+                                            <a class="dropdown-item" href="#"><i class="fe fe-chevrons-right fe-12 mr-4"></i>Move</a>
+                                            <a class="dropdown-item" href="#"><i class="fe fe-copy fe-12 mr-4"></i>Copy</a>
+                                            <a class="dropdown-item" href="#"><i class="fe fe-edit-3 fe-12 mr-4"></i>Rename</a>
+                                            <a class="dropdown-item" href="#"><i class="fe fe-delete fe-12 mr-4"></i>Delete</a>
+                                            <a class="dropdown-item" href="#"><i class="fe fe-share fe-12 mr-4"></i>Share</a>
+                                            <a class="dropdown-item" href="#"><i class="fe fe-download fe-12 mr-4"></i>Download</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                            <tr id="collap-{{ $t->id_employee }}" class="collapse bg-light">
+                                <td colspan="6" class="p-0">
+                                    <table class="table table-sm mb-0">
+                                        <thead>
+                                        <tr class="thead-light">
+                                            <th class="w-10" style="font-size: 14px; padding-left: 3.5rem; text-align: center">Week</th>
+                                            <th class="w-10" style="font-size: 14px; padding-left: 3.5rem;">Activity</th>
+                                            <th class="days-column" style="font-size: 14px;">Day 1</th>
+                                            <th class="days-column" style="font-size: 14px;">Day 2</th>
+                                            <th class="days-column" style="font-size: 14px;">Day 3</th>
+                                            <th class="days-column" style="font-size: 14px;">Day 4</th>
+                                            <th class="days-column" style="font-size: 14px;">Day 5</th>
+                                            <th class="days-column" style="font-size: 14px;">Day 6</th>
+                                            <th class="days-column" style="font-size: 14px;">Day 7</th>
+
+                                            <th style="font-size: 14px;">Total Man-hrsss</th>
+                                            <th style="font-size: 14px;">Status</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($timesheet->where('id_employee', $t->id_employee) as $s)
+                                            @if($t->id_employee == $s->id_employee)
+                                                <tr>
+                                                    <td>Week - {{ $s->week }}</td>
+                                                    <td>{{ $s->activity->name_activity }}</td>
+                                                    @foreach($timesheetactivity->where('id_timesheet', $s->id) as $ta)
+                                                        <td>{{ $ta->hours }}</td>
+                                                    @endforeach
+                                                    <td>{{ $timesheetactivity->where('id_timesheet', $s->id)->sum('hours') }}</td>
+                                                    <td colspan="2">{{ $s->status }}</td>
+                                                </tr>
+                                            @endif
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
                         @endforeach
-                    </tbody>
-                </table>
-            </div> <!-- .row -->
+                        </tbody>
+                        <tfoot>
+                            <tr class="text-center">
+                                <th></th>
+                                <th>
+                                    <input type="hidden" name="status" id="statusInput">
+                                    <input type="hidden" name="code_project" value="{{ $project->code_project }}">
+                                    <div class="d-flex justify-content-between">
+                                        <a class="btn mb-2 btn-success text-white ml-2 mr-2" style="width: 95px; box-shadow: 6px 8px 9px rgba(203, 216, 227, 0.5);" onclick="setStatus('approve')">Approve</a>
+                                        <a class="btn mb-2 btn-secondary text-white mr-2" style="width: 95px; box-shadow: 6px 8px 9px rgba(203, 216, 227, 0.5);" onclick="setStatus('reject')"><span class="fe fe-check fe-22 mr-2"></span>Reject</a>
+                                    </div>
+                                </th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </form>
         </div>
         <!-- .file-panel -->
         <div class="info-panel overflow-auto" style="height: 500px;">
@@ -141,3 +199,10 @@
         </div>
     </div> <!-- .file-container -->
 </div> <!-- .tab-pane -->
+
+<script>
+    function setStatus(status) {
+        document.getElementById('statusInput').value = status;
+        document.getElementById('timesheetForm').submit();
+    }
+</script>

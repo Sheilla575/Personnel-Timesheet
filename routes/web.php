@@ -77,6 +77,10 @@ Route::middleware(['auth:web', 'cek_login:1'])->group(function () {
     Route::post('/destroy_Department/{id}', [SettingController::class, 'destroy_Department'])->name('destroy_department');
 });
 
+Route::middleware(['auth:web,employee', 'cek_login:1,2,3'])->group(function () {
+    Route::post('/timesheet', [SettingController::class, 'update_Timesheet'])->name('update_timesheet');
+});
+
 Route::middleware(['auth:web,employee', 'cek_login:1,2'])->group(function () {
     //========== Page Project ==========\\
     Route::get('/all-project', [ProjectController::class, 'index'])->name('listproject');
@@ -89,7 +93,7 @@ Route::middleware(['auth:web,employee', 'cek_login:1,2'])->group(function () {
     Route::get('/all_discipline/{id:id}', [ProjectController::class, 'index_Discipline'])->name('index_Discipline');
 });
 
-Route::middleware(['auth:employee', 'cek_login:2,3'])->group(function () {
+Route::middleware(['auth:web,employee', 'cek_login:2,3'])->group(function () {
 
     Route::get('/form-timesheet', [TimesheetController::class, 'worksheet'])->name('worksheet');
     Route::post('/draft-timsheet', [TimesheetController::class, 'draft_timesheet'])->name('draft_timesheet');

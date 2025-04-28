@@ -13,6 +13,7 @@ use App\Models\LogImport;
 use App\Models\Position;
 use App\Models\Project;
 use App\Models\Role;
+use App\Models\Timesheet;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -481,4 +482,28 @@ class SettingController extends Controller
     }
     // End Resource Project
     //============================================================
+
+    public function update_Timesheet(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'status' => 'required|in:approve,reject',
+                'code_project' => 'required|string',
+                'employee_ids' => 'required|array',
+                'employee_ids.*' => 'string'
+            ]);
+
+            $statusValue = $validated['status'] === 'approve' ? 'approved' : 'rejected';
+
+            Timesheet::where('code_project', $validated['code_project'])
+                ->whereIn('id_employee', $validated['employee_ids'])
+                ->update(['status' => $statusValue]);
+
+            return redirect()->back()->with('success', 'Timesheets updated successfully.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->validator)->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage())->withInput();
+        }
+    }
 }
