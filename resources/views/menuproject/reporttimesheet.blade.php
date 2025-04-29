@@ -19,7 +19,7 @@
     <div class="col-md-7 mb-4">
         <div class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
-                <strong class="mr-auto">Pendding Approval</strong>
+                <strong class="mr-auto">Pending Approval</strong>
                 <small>11 mins ago</small>
                 <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
                     <span aria-hidden="true">×</span>
@@ -88,37 +88,37 @@
             </thead>
             <tbody>
                 @foreach($team as $t)
-                <!-- Data User-->
-                <tr class="accordion-toggle collapsed" id="c-{{ $t->id_employee }}" data-toggle="collapse" data-parent="#c-{{ $t->id_employee }}" href="#collap-{{ $t->id_employee }}" style="border-bottom: 1px;">
-                    <td class="border-0" style="width: 10px;">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="{{ $t->id_employee }}" />
-                            <label class="custom-control-label" for="{{ $t->id_employee }}"></label>
-                        </div>
-                    </td>
-                    <td class="w-25 border-0">
-                        {{ $t->employee->name }}<br /><span class="small text-muted">{{ $t->employee->position->positions_name }}</span>
-                    </td>
-                    <td class="">0</td>
-                    <td class="">0</td>
-                    <td class="">0</td>
-                    <td class="">0</span></td>
-                    <td class="">0</td>
-                    <td class="">0</td>
-                    <td class="">0</td>
-                    @if($timesheet->where('id_employee', $t->id_employee))
-                    <!-- @foreach($timesheetactivity as $day)
-                    <td class="">{{ $day->sum('hours') }}
-                        <span class="fe fe-message-square ml-2"
-                            data-bs-toggle="popover"
-                            data-bs-placement="top"
-                            data-bs-html="true"
-                            data-bs-offset="0,14"
-                            title="Notes"
-                            data-content="MWT JPMP & JPMPL">
-                        </span>
-                    </td>
-                    @endforeach -->
+                    <!-- Data User-->
+                    <tr class="accordion-toggle collapsed" id="c-{{ $t->id_employee }}" data-toggle="collapse" data-parent="#c-{{ $t->id_employee }}" href="#collap-{{ $t->id_employee }}" style="border-bottom: 1px;">
+                        <td class="border-0" style="width: 10px;">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="{{ $t->id_employee }}" />
+                                <label class="custom-control-label" for="{{ $t->id_employee }}"></label>
+                            </div>
+                        </td>
+                        <td class="w-25 border-0">
+                            {{ $t->employee->name }}<br /><span class="small text-muted">{{ $t->employee->position->positions_name }}</span>
+                        </td>
+                        <td class="">0</td>
+                        <td class="">0</td>
+                        <td class="">0</td>
+                        <td class="">0</td>
+                        <td class="">0</td>
+                        <td class="">0</td>
+                        <td class="">0</td>
+                        @if($timesheet->where('id_employee', $t->id_employee))
+                        <!-- @foreach($timesheetactivity as $day)
+                        <td class="">{{ $day->sum('hours') }}
+                            <span class="fe fe-message-square ml-2"
+                                data-bs-toggle="popover"
+                                data-bs-placement="top"
+                                data-bs-html="true"
+                                data-bs-offset="0,14"
+                                title="Notes"
+                                data-content="MWT JPMP & JPMPL">
+                            </span>
+                        </td>
+                        @endforeach -->
                     <td>
                         @if($timesheet->where('id_employee', $t->id_employee))
                         {{ $timesheetactivity->where('id_timesheet', '$t->employee->timesheet->id')->sum('hours') }}

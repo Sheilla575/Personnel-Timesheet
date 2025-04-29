@@ -78,11 +78,13 @@
                 <div class="dropdown float-right">
                     <form method="GET" action="{{ route('Page_Setting') }}">
                         <div class="form-group col-md-12">
-                            <label class="sr-only" for="inlineFormCustomSelectPref">Filter Head of:</label>
-                            <select class="custom-select select2" name="search" id="search" id="inlineFormCustomSelectPref" value="{{ request('search') }}">
-                                <option selected>Head of Discipline Choose...</option>
-                                @foreach($disciplin as $d)
-                                <option value="{{ request('search') }}">{{ $d->id }} - {{ $d->disciplin_name }}</option>
+                            <label class="sr-only" for="search">Filter Head of:</label>
+                            <select class="custom-select select2" name="search" id="search" onchange="this.form.submit()">
+                                <option disabled selected>Head of Discipline Choose...</option>
+                                @foreach($list_discipline as $d)
+                                    <option value="{{ $d->id }}" {{ request('search') == $d->id ? 'selected' : '' }}>
+                                        {{ $d->id }} - {{ $d->disciplin_name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>

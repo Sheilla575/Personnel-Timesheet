@@ -13,7 +13,9 @@ use App\Models\LogImport;
 use App\Models\Position;
 use App\Models\Project;
 use App\Models\Role;
+use App\Models\Timesheet;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -25,6 +27,8 @@ class SettingController extends Controller
         $disciplin = Disciplin::search($request->search)->paginate($pagination);
         $activity = Activity::search($request->search)->paginate($pagination);
         $position = Position::search($request->search)->paginate($pagination);
+        $list_project = Project::query()->paginate($pagination);
+        $projectManagers = Employee::where('id_position', 'PM')->get();
         return view('settings', [
             'title' => 'Settings',
             'division' => Division::all(),
@@ -32,9 +36,11 @@ class SettingController extends Controller
             'disciplin' => $disciplin,
             'activity' => $activity,
             'position' =>  $position,
-            'listproject' => Project::all(),
+            'listproject' => $list_project,
             'employee' => Employee::all(),
             'users' => User::all(),
+            'list_discipline' => Disciplin::all(),
+            'projectManagers' => $projectManagers,
         ]);
     }
 
@@ -123,8 +129,95 @@ class SettingController extends Controller
     // End Resource user
     //============================================================\\
     //============================================================
-    public function storeDepartment(Request $request) {} //setting division
-    public function storeDivision(Request $request) {} // seting for disciplin 
+    public function update_Department(Request $request, $id) {
+        $request->validate([
+            'department_name' => 'required',
+            'status' => 'required'
+        ]);
+
+        $department = Department::find($id);
+
+        $department->update([
+            'department_name' => $request->get('department_name'),
+            'status' => $request->get('status'),
+        ]);
+
+        return redirect()->back()->with('success', 'Department updated successfully.');
+    }
+
+    public function destroy_Department($id) {
+        $department = Department::find($id);
+        if (!$department->delete()) {
+            return redirect()->back()->with(['success', 'Data permanently deleted!!']);
+        } else {
+            $department->forceDelete();
+            return redirect()->back()->with(['error', 'Data Gagal Dihapus']);
+        }
+    }
+
+    public function store_Department(Request $request) {
+        $request->validate([
+            'department_name' => 'required',
+            'status' => 'required'
+        ]);
+
+        Department::create([
+            'id' => Department::getIdDepartmentAttribute(),
+            'department_name' => $request->get('department_name'),
+            'status' => $request->get('status'),
+        ]);
+
+        return redirect()->back()->with('success', 'Department created successfully.');
+    }
+
+    //setting division
+    public function store_Division(Request $request) {
+        $request->validate([
+            'id' => 'required',
+            'id_department' => 'required',
+            'division_name' => 'required',
+            'status' => 'required'
+        ]);
+
+        Division::create([
+            'id' => $request->get('id'),
+            'id_department' => $request->get('id_department'),
+            'division_name' => $request->get('division_name'),
+            'status' => $request->get('status'),
+        ]);
+
+        return redirect()->back()->with('success', 'Division created successfully.');
+    }
+
+    public function update_Division(Request $request, $id) {
+        $request->validate([
+            'id_department' => 'required',
+            'division_name' => 'required',
+            'status' => 'required'
+        ]);
+
+        $division = Department::find($id);
+
+        $division->update([
+            'id_department' => $request->get('id_department'),
+            'division_name' => $request->get('division_name'),
+            'status' => $request->get('status'),
+        ]);
+
+        return redirect()->back()->with('success', 'Division updated successfully.');
+    }
+
+    public function destroy_Division($id) {
+        $division = Division::find($id);
+        if (!$division->delete()) {
+            return redirect()->back()->with(['success', 'Data permanently deleted!!']);
+        } else {
+            $division->forceDelete();
+            return redirect()->back()->with(['error', 'Data Gagal Dihapus']);
+        }
+    }
+
+    // seting for disciplin
     //============================================================\\
     //============================================================
     // Resource Disciplin
@@ -145,6 +238,37 @@ class SettingController extends Controller
             'assignment_date' => $request->assignment_date,
         ]);
         return redirect()->back()->with('success', 'HOD assigned successfully.');
+    }
+
+    public function store_Discipline(Request $request) {
+        $request->validate([
+            'discipline_name' => 'required',
+            'id_division' => 'required',
+            'assignment' =>  'nullable',
+            'assignment_date' => 'nullable|date',
+        ]);
+
+        $assignmentDate = Carbon::createFromFormat('m/d/Y', $request->assignment_date)->format('Y-m-d');
+
+        Disciplin::create([
+            'id' => Disciplin::getIdDisciplineAttribute(),
+            'disciplin_name' => $request->discipline_name,
+            'id_division' => $request->id_division,
+            'assignment' => $request->assignment,
+            'assignment_date' => $assignmentDate,
+        ]);
+
+        return redirect()->back()->with('success', 'Discipline created successfully.');
+    }
+
+    public function destroy_Discipline($id) {
+        $discipline = Disciplin::find($id);
+        if (!$discipline->delete()) {
+            return redirect()->back()->with(['success', 'Data permanently deleted!!']);
+        } else {
+            $discipline->forceDelete();
+            return redirect()->back()->with(['error', 'Data Gagal Dihapus']);
+        }
     }
 
     // End Resource Disciplin
@@ -283,7 +407,103 @@ class SettingController extends Controller
 
         ]);
     }
+
+    public function destroy_Employee($id)
+    {
+        $employeeDetails = Employee::find($id);
+        if (!$employeeDetails->delete()) {
+            return redirect()->back()->with(['success', 'Data permanently deleted!!']);
+        } else {
+            $employeeDetails->forceDelete();
+            return redirect()->back()->with(['error', 'Data Gagal Dihapus']);
+        }
+    }
+
+    public function update_Employee(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'level_roles' => 'required',
+            'type_user' => 'required',
+        ]);
+
+        $employee = Employee::find($id);
+
+        if ($request["password"] == "" || $request["password"] == NULL) {
+            $request["password"] = $employee->password;
+        }else {
+            $request["password"] = bcrypt($request["password"]);
+        }
+
+        $employee->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->password,
+            'level_roles' => $request->level_roles,
+            'type_user' => $request->type_user
+        ]);
+
+        return redirect()->back()->with('success', 'Employee updated successfully.');
+    }
     // End Resource LogImport
     //============================================================
     //============================================================
+    // Resource Project
+    public function store_project(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'code_project' => 'required|string|unique:projects,code_project',
+                'name_project' => 'required|string|max:255',
+                'start_date' => 'required|date',
+                'end_date' => 'required|date|after_or_equal:start_date',
+                'project_manager' => 'required|exists:employees,id',
+            ]);
+
+            logger()->info('Project created', ['project' => $validated]);
+
+            Project::create([
+                'code_project' => $validated['code_project'],
+                'name_project' => $validated['name_project'],
+                'start_date' => $validated['start_date'],
+                'end_date' => $validated['end_date'],
+                'total_plan_manhours' => 0, // default value
+                'project_manager' => $validated['project_manager'],
+                'status' => 'Active' // default value
+            ]);
+
+            return redirect()->back()->with('success', 'Project created successfully.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->validator)->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage())->withInput();
+        }
+    }
+    // End Resource Project
+    //============================================================
+
+    public function update_Timesheet(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'status' => 'required|in:approve,reject',
+                'code_project' => 'required|string',
+                'employee_ids' => 'required|array',
+                'employee_ids.*' => 'string'
+            ]);
+
+            $statusValue = $validated['status'] === 'approve' ? 'approved' : 'rejected';
+
+            Timesheet::where('code_project', $validated['code_project'])
+                ->whereIn('id_employee', $validated['employee_ids'])
+                ->update(['status' => $statusValue]);
+
+            return redirect()->back()->with('success', 'Timesheets updated successfully.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->validator)->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage())->withInput();
+        }
+    }
 }

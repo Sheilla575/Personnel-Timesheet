@@ -34,9 +34,6 @@
                     <li class="nav-item">
                         <a class="nav-link tab-link nav-1 show" id="project-tab" data-toggle="tab" href="#project" role="tab" aria-controls="project" aria-selected="false">Project</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link tab-link nav-1 show" id="employee-tab" data-toggle="tab" href="#employee" role="tab" aria-controls="employee" aria-selected="false">Roles Aksess</a>
-                    </li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show" id="division" role="tabpanel" aria-labelledby="division-tab">
