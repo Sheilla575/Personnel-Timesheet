@@ -107,28 +107,28 @@ class TimesheetController extends Controller
 
         $activities = [];
 
-        if ($timesheet) {
-            $grouped = $timesheet->groupBy(function ($item) {
-                return $item->code_project . '|' . $item->code_activity;
-            });
+        $grouped = $timesheet->groupBy(function ($item) {
+            return $item->code_project . '|' . $item->code_activity;
+        });
 
-            foreach ($grouped as $key => $items) {
-                $details = [];
+        foreach ($grouped as $key => $items) {
+            $details = [];
 
-                foreach ($items as $act) {
-                    $details[$act->date] = [
-                        'man_hours' => $act->hours,
-                        'note' => $act->note,
-                    ];
-                }
-
-                $activities[] = [
-                    'code_project' => $items[0]->code_project,
-                    'code_activity' => $items[0]->code_activity,
-                    'status' => $items[0]->status,
-                    'details' => $details
+            foreach ($items as $act) {
+                $details[$act->date] = [
+                    'man_hours' => $act->hours,
+                    'note' => $act->note,
                 ];
             }
+
+            $activities[] = [
+                'code_project' => $items[0]->code_project,
+                'code_activity' => $items[0]->code_activity,
+                'status' => $items[0]->status,
+                'details' => $details,
+                'approved_at' => $timesheet->first()->approved_at,
+                'rejected_at' => $timesheet->first()->rejected_at,
+            ];
         }
 
 
@@ -153,6 +153,7 @@ class TimesheetController extends Controller
             $year = $request->input('year');
             $action = $request->input('action'); // ambil dari tombol
             $status = $action === 'pending' ? 'Pending' : 'Draft';
+            $submitted_at = $action === 'pending' ? now() : null;
             // dd($request);
             $timesheetActivities  = [];
             $Timesheet = [];
@@ -167,6 +168,7 @@ class TimesheetController extends Controller
                     'year' => $year,
                     'code_project' => $activities['code_project'],
                     'code_activity' => $activities['code_activity'],
+                    'submitted_at' => $submitted_at,
                 ]);
                 // Set ID hanya jika Timesheet baru
                 if (!$Timesheet->exists) {

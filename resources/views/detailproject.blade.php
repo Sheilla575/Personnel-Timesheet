@@ -84,10 +84,7 @@
             <div class="my-4">
                 <ul class="nav nav-tabs" id="pills-tab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link nav-1 active" id="pills-team-tab" data-toggle="pill" href="#pills-team" role="tab" aria-controls="pills-team" aria-selected="false">Team Member</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-1" id="pills-timesheet-tab" data-toggle="pill" href="#pills-timesheet" role="tab" aria-controls="pills-timesheet" aria-selected="true"><span class="fe fe-calendar mr-2"></span>Timesheet</a>
+                        <a class="nav-link nav-1 active" id="pills-team-tab" data-toggle="pill" href="#pills-team" role="tab" aria-controls="pills-team" aria-selected="false">Team Members</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link nav-1" id="pills-plan-manhours-tab" data-toggle="pill" href="#pills-plan-manhours" role="tab" aria-controls="pills-plan-manhours" aria-selected="false">Reports Man Hours</a>
