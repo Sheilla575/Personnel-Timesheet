@@ -321,7 +321,9 @@
                         <select class="form-control form-control-sm mr-sm-2 bg-transparent border-0 text-muted select2" name="activities[${rowId}][code_activity]" style="width: max-content;" >
                             <optgroup label="Select Activity">
                                @foreach ($activity as $a)
-                                <option value="{{ $a->activity_id  }}" ${selectedActivity == "{{ $a->activity_id  }}" ? 'selected' : ''}>{{ $a->position_id }} - {{ $a->name_activity }}</option>
+                                    @if (user()->id_position == $a->position_id)
+                                        <option value="{{ $a->activity_id  }}" ${selectedActivity == "{{ $a->activity_id  }}" ? 'selected' : ''}>{{ $a->position_id }} - {{ $a->name_activity }}</option>
+                                    @endif
                                 @endforeach
                             </optgroup>
                         </select>

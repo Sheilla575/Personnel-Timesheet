@@ -28,16 +28,16 @@
                         <tbody>
                         @foreach($team as $t)
                             <tr class="file-list accordion-toggle collapsed" id="c-{{ $t->id_employee }}" data-toggle="collapse" data-parent="#c-{{ $t->id_employee }}" href="#collap-{{ $t->id_employee }}" style="border-bottom: 1px;">
-                                <td class="border-0" style="width: 10px;">
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox"
-                                               class="custom-control-input time-sheet-checkbox"
-                                               name="employee_ids[]"
-                                               value="{{ $t->id_employee }}"
-                                               id="emp-{{ $t->id_employee }}" />
-                                        <label class="custom-control-label" for="emp-{{ $t->id_employee }}"></label>
-                                    </div>
-                                </td>
+{{--                                <td class="border-0" style="width: 10px;">--}}
+{{--                                    <div class="custom-control custom-checkbox">--}}
+{{--                                        <input type="checkbox"--}}
+{{--                                               class="custom-control-input time-sheet-checkbox"--}}
+{{--                                               name="timesheet_ids[]"--}}
+{{--                                               value="{{ $t->id_employee }}"--}}
+{{--                                               id="emp-{{ $t->id_employee }}" />--}}
+{{--                                        <label class="custom-control-label" for="emp-{{ $t->id_employee }}"></label>--}}
+{{--                                    </div>--}}
+{{--                                </td>--}}
                                 <th scope="row">{{ $t->employee->name }}<br />
                                     <div class="align-items-center">
                                         <span class="card badge badge-light text-success">Activity <i class="fe fe-external-link fe-12"></i></span>
@@ -68,6 +68,7 @@
                                     <table class="table table-sm mb-0">
                                         <thead>
                                         <tr class="thead-light">
+                                            <th class="w-10" style="font-size: 14px; text-align: center"></th>
                                             <th class="w-10" style="font-size: 14px; padding-left: 3.5rem; text-align: center">Week</th>
                                             <th class="w-10" style="font-size: 14px; padding-left: 3.5rem;">Activity</th>
                                             <th class="days-column" style="font-size: 14px;">Day 1</th>
@@ -86,6 +87,16 @@
                                         @foreach($timesheet->where('id_employee', $t->id_employee) as $s)
                                             @if($t->id_employee == $s->id_employee)
                                                 <tr>
+                                                    <td class="border-0" style="width: 10px;">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input type="checkbox"
+                                                                   class="custom-control-input time-sheet-checkbox"
+                                                                   name="timesheet_ids[]"
+                                                                   value="{{ $s->id }}"
+                                                                   id="timesheet-{{ $s->id }}" />
+                                                            <label class="custom-control-label" for="timesheet-{{ $s->id }}"></label>
+                                                        </div>
+                                                    </td>
                                                     <td>Week - {{ $s->week }}</td>
                                                     <td>{{ $s->activity->name_activity }}</td>
                                                     @foreach($timesheetactivity->where('id_timesheet', $s->id) as $ta)
@@ -109,8 +120,8 @@
                                     <input type="hidden" name="status" id="statusInput">
                                     <input type="hidden" name="code_project" value="{{ $project->code_project }}">
                                     <div class="d-flex justify-content-between">
-                                        <a class="btn mb-2 btn-success text-white ml-2 mr-2" style="width: 95px; box-shadow: 6px 8px 9px rgba(203, 216, 227, 0.5);" onclick="setStatus('approve')">Approve</a>
-                                        <a class="btn mb-2 btn-secondary text-white mr-2" style="width: 95px; box-shadow: 6px 8px 9px rgba(203, 216, 227, 0.5);" onclick="setStatus('reject')"><span class="fe fe-check fe-22 mr-2"></span>Reject</a>
+                                        <a class="btn mb-2 btn-success text-white ml-2 mr-2" style="width: 95px; box-shadow: 6px 8px 9px rgba(203, 216, 227, 0.5);" onclick="setStatus('approved')">Approve</a>
+                                        <a class="btn mb-2 btn-secondary text-white mr-2" style="width: 95px; box-shadow: 6px 8px 9px rgba(203, 216, 227, 0.5);" onclick="setStatus('rejected')"><span class="fe fe-check fe-22 mr-2"></span>Reject</a>
                                     </div>
                                 </th>
                             </tr>

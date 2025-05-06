@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Exports\ActivityTemplateExport;
 use App\Models\Activity;
-use App\Models\Calendar;
 use App\Models\Department;
 use App\Models\Disciplin;
 use App\Models\Division;
@@ -487,16 +486,15 @@ class SettingController extends Controller
     {
         try {
             $validated = $request->validate([
-                'status' => 'required|in:approve,reject',
+                'status' => 'required|in:approved,rejected',
                 'code_project' => 'required|string',
-                'employee_ids' => 'required|array',
-                'employee_ids.*' => 'string'
+                'timesheet_ids' => 'required|array',
+                'timesheet_ids.*' => 'string'
             ]);
 
-            $statusValue = $validated['status'] === 'approve' ? 'approved' : 'rejected';
-
+            $statusValue = $validated['status'];
             Timesheet::where('code_project', $validated['code_project'])
-                ->whereIn('id_employee', $validated['employee_ids'])
+                ->whereIn('id', $validated['timesheet_ids'])
                 ->update(['status' => $statusValue]);
 
             return redirect()->back()->with('success', 'Timesheets updated successfully.');
