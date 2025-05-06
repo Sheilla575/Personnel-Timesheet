@@ -153,6 +153,7 @@ class TimesheetController extends Controller
             $year = $request->input('year');
             $action = $request->input('action'); // ambil dari tombol
             $status = $action === 'pending' ? 'Pending' : 'Draft';
+            $submitted_at = $action === 'pending' ? now() : null;
             // dd($request);
             $timesheetActivities  = [];
             $Timesheet = [];
@@ -167,6 +168,7 @@ class TimesheetController extends Controller
                     'year' => $year,
                     'code_project' => $activities['code_project'],
                     'code_activity' => $activities['code_activity'],
+                    'submitted_at' => $submitted_at,
                 ]);
                 // Set ID hanya jika Timesheet baru
                 if (!$Timesheet->exists) {

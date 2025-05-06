@@ -493,9 +493,18 @@ class SettingController extends Controller
             ]);
 
             $statusValue = $validated['status'];
+
+            $timeNow = Carbon::now();
+            $approvedAt = $statusValue === 'approve' ? $timeNow : null;
+            $rejectedAt = $statusValue === 'rejecte' ? $timeNow : null;
+
             Timesheet::where('code_project', $validated['code_project'])
                 ->whereIn('id', $validated['timesheet_ids'])
-                ->update(['status' => $statusValue]);
+                ->update([
+                    'status' => $statusValue,
+                    'approved_at' => $approvedAt,
+                    'rejected_at' => $rejectedAt,
+                ]);
 
             return redirect()->back()->with('success', 'Timesheets updated successfully.');
         } catch (\Illuminate\Validation\ValidationException $e) {

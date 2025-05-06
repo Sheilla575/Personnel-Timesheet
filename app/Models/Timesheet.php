@@ -21,7 +21,10 @@ class Timesheet extends Model
         'year',
         'code_project',
         'code_activity',
-        'status'
+        'status',
+        'submitted_at',
+        'approved_at',
+        'rejected_at'
     ];
 
     // protected static function boot()

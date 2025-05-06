@@ -70,6 +70,7 @@
                                         <tr class="thead-light">
                                             <th class="w-10" style="font-size: 14px; text-align: center"></th>
                                             <th class="w-10" style="font-size: 14px; padding-left: 3.5rem; text-align: center">Week</th>
+                                            <th class="w-10" style="font-size: 14px; padding-left: 3.5rem;">Submitted At</th>
                                             <th class="w-10" style="font-size: 14px; padding-left: 3.5rem;">Activity</th>
                                             <th class="days-column" style="font-size: 14px;">Day 1</th>
                                             <th class="days-column" style="font-size: 14px;">Day 2</th>
@@ -98,6 +99,13 @@
                                                         </div>
                                                     </td>
                                                     <td>Week - {{ $s->week }}</td>
+                                                    <td>
+                                                        {{
+                                                           optional($s)->submitted_at
+                                                               ? \Carbon\Carbon::parse($s->submitted_at)->format('Y-m-d H:i')
+                                                               : '-'
+                                                       }}
+                                                    </td>
                                                     <td>{{ $s->activity->name_activity }}</td>
                                                     @foreach($timesheetactivity->where('id_timesheet', $s->id) as $ta)
                                                         <td>{{ $ta->hours }}</td>
