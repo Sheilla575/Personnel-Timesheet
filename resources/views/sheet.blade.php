@@ -130,6 +130,7 @@
                             <thead>
                                 <tr id="days-header">
                                     <th class="text-center"><button type="button" onclick="addNewRow()" class="btn mb-2 btn-light btn-sm mt-3"><span class="fe fe-plus-circle fe-16 text-primary"><span></button></th>
+                                    <th class="frozen-column w-10">Updated Status</th>
                                     <th class="frozen-column w-25">Project</th>
                                     <th>Activity</th>
                     `;
@@ -189,13 +190,21 @@
             let selectedProject = activity?.code_project ?? '';
             let selectedActivity = activity?.code_activity ?? '';
             let status = activity?.status ?? '';
+            let updateStatusDate = activity?.approved_at != null ? activity?.approved_at : activity?.rejected_at
             let detailDates = activity?.details ?? {};
+
+            if (updateStatusDate == null){
+                updateStatusDate = "-"
+            }
 
             if (isLocked == 'new') {
                 rowHTML = `
                     <tr id="${rowId}">
                         <td class="text-center">
                             <a class="ml-2" onclick="removeRow('${rowId}')"><span class="fe fe-x-circle fe-16"></span></a>
+                        </td>
+                         <td>
+                            <span class="text-warning">${updateStatusDate}</span>
                         </td>
                         <td class="frozen-column w-25">
                         <select class="form-control form-control-sm select2 bg-transparent border-0" title="Judul Popover" name="activities[${rowId}][code_project]">
@@ -233,7 +242,9 @@
                                 <option>No activities available for adding</option>
                                 @else
                                 @foreach ($activity as $a)
-                                <option value="{{ $a->activity_id }}">{{ $a->position_id }} - {{ $a->name_activity }}</option>
+                                    @if (user()->id_position == $a->position_id)
+                                        <option value="{{ $a->activity_id }}">{{ $a->position_id }} - {{ $a->name_activity }}</option>
+                                    @endif
                                 @endforeach
                                 @endif
                                 </optgroup>
@@ -295,6 +306,9 @@
                  <tr id="${rowId}">
                     <td class="text-center">
                         <span class="text-warning">${status}</span>
+                    </td>
+                    <td>
+                        <span class="text-warning">${updateStatusDate}</span>
                     </td>
                      <td class="frozen-column w-25">
                     <select class="form-control form-control-sm select2 bg-transparent border-0" title="Judul Popover" name="activities[${rowId}][code_project]">

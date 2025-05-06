@@ -495,8 +495,8 @@ class SettingController extends Controller
             $statusValue = $validated['status'];
 
             $timeNow = Carbon::now();
-            $approvedAt = $statusValue === 'approve' ? $timeNow : null;
-            $rejectedAt = $statusValue === 'rejecte' ? $timeNow : null;
+            $approvedAt = $statusValue === 'approved' ? $timeNow : null;
+            $rejectedAt = $statusValue === 'rejected' ? $timeNow : null;
 
             Timesheet::where('code_project', $validated['code_project'])
                 ->whereIn('id', $validated['timesheet_ids'])
