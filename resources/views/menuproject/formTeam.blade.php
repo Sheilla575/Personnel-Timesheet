@@ -13,7 +13,7 @@
     </div>
     @endif
 </div>
-<h5 class="mb-0 mt-5">Add Personnel Project</h5>
+<h5 class="mb-0 mt-5">Request Personnel HO</h5>
 <div class="row col-md-12">
     <form action="{{ route('store_Activity') }}" method="POST">
         @csrf
@@ -22,8 +22,8 @@
                 <label for="simple-select2">Search Employee</label>
                 <select class="form-control select2" id="simple-select2" name="id_employee">
                     <optgroup label="Alaskan/Hawaiian Time Zone">
-                        @foreach($employee as $e)
-                        <option value="{{ $e->id }}">{{ $e->name }} - {{ $e->position->positions_name }}</option>
+                        @foreach($position as $e)
+                        <option value="{{ $e->id }}">{{ $e->positions_name }} - {{ $e->disciplin->disciplin_name }}</option>
                         @endforeach
                     </optgroup>
                 </select>
@@ -46,7 +46,41 @@
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
 </div>
-<hr class="my-4">
+<hr>
+<h5 class="mb-0 mt-5">Direct Hired Project Personnel</h5>
+<div class="row col-md-12">
+    <form action="{{ route('store_Activity') }}" method="POST">
+        @csrf
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="simple-select2">Search Employee</label>
+                <select class="form-control select2" id="simple-select2" name="id_employee">
+                    <optgroup label="Employee Non HO">
+                        @foreach($employee->where('type', 'Non HO') as $e)
+                        <option value="{{ $e->id }}">{{ $e->name }} - {{ $e->position->position_name }}</option>
+                        @endforeach
+                    </optgroup>
+                </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="simple-select2">Plan Man Hours</label>
+                <input type="number" min="1" name="status" class="form-control">
+            </div>
+            <!-- form-group -->
+            <div class="form-group col-md-2">
+                <label for="multi-select2">Status</label>
+                <input type="text" name="status" class="form-control select2" value="Active" readonly>
+            </div>
+            <div class="form-group col-md-1" style="margin-top: 30px;">
+                <button class="btn btn-secondary add-row">Add</button>
+            </div>
+            <!-- form-group -->
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
+<!-- <hr class="my-4">
 <h2 class="h4 mb-1">Import Data Team Project</h2>
 <div class="form-group col-md-10">
     <p class="small text-muted mb-2">Use this feature to import team members into a project. Please ensure the data you upload follows the requirements below:</p>
@@ -66,7 +100,7 @@
     </a>
 </div>
 <div class="form-group col-md-10">
-    <livewire:import-team />
-</div>
+    //livewire:import-team
+</div> -->
 
 <!-- .tab-pane -->

@@ -190,7 +190,7 @@
             </thead>
         </table>
 
-        <livewire:report-manhours :year="2025" :week="17" :codeProject="$project->code_project" />
+        <livewire:report-manhours :year="$year" :week="$week" :codeProject="$project->code_project" />
 
     </div> <!-- .card-body -->
 </div> <!-- .card -->

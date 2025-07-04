@@ -26,8 +26,8 @@ class ReportManhours extends Component
 
     public function mount($year = null, $week = null, $codeProject = null)
     {
-        $year = \Carbon\Carbon::parse($this->week)->year;
-        $weekNumber = \Carbon\Carbon::parse($this->week)->isoWeek;
+        $year = $this->week;
+        $weekNumber = $this->week;
 
         $this->year = $year;
         $this->codeProject = $codeProject;
@@ -82,8 +82,8 @@ class ReportManhours extends Component
 
         // Ambil ]data timesheet - timesheet activity
         $timesheet = Timesheet::join('timesheet_activities', 'timesheets.id', '=', 'timesheet_activities.id_timesheet')
-            ->where('timesheets.year', '2025')
-            ->where('timesheets.week', '17')
+            ->where('timesheets.year', $year)
+            ->where('timesheets.week', $weekNumber)
             ->where('timesheets.code_project', $codeProject)
             ->whereIn('timesheets.id_employee', $employeeIds)
             ->get(['timesheets.*', 'timesheet_activities.*']);
@@ -115,7 +115,16 @@ class ReportManhours extends Component
                 $activities[] = [
                     'employee' => $employee,
                     'code_activity' => $activity,
+                    'details' => $details
                 ];
+
+                // $activities[] = [
+                //     'id_employee' =>  $items[0]->id_employee,
+                //     'code_project' => $items[0]->code_project,
+                //     'code_activity' => $items[0]->code_activity,
+                //     'status' => $items[0]->status,
+                //     'details' => $details
+                // ];
             }
         }
         $this->activities = $activities;

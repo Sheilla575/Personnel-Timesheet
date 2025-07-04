@@ -20,10 +20,10 @@
             @foreach ($activities as $item)
             <tr>
                 <td>{{ $item['employee']->name ?? '-' }}</td>
-                <td>{{ $item['activity']->name_activity ?? '-' }}</td>
+                <td>{{ $item['code_activity']->name_activity ?? '-' }}</td>
                 @foreach ($weekDates as $date)
                 <td>
-                    {{ $item['details'][$date]['man_hours'] ?? 0 }}
+                    {{ $item['details']->man_hours ?? 0 }}
                 </td>
                 @endforeach
             </tr>

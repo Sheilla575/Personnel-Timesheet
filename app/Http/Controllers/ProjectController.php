@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Exports\TeamTemplateExport;
 use App\Models\Disciplin;
 use App\Models\Employee;
+use App\Models\Position;
 use App\Models\Project;
+use App\Models\TeamProject;
 use App\Models\TimesheetActivity;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -32,7 +34,8 @@ class ProjectController extends Controller
         // } else {
         //     return response()->json(['success' => false, 'message' => 'Project not found']);
         // }
-        $selectedWeek = now()->week();
+        $week = now()->week();
+        $year = date('Y');
         return view('detailproject', [
             'title' =>  $project->name_project,
             'project' => $project,
@@ -40,7 +43,9 @@ class ProjectController extends Controller
             'timesheet' => $project->timesheet,
             'timesheetactivity' => TimesheetActivity::orderBy('date')->get(),
             'employee' => Employee::all(),
-            'selectedWeek' => $selectedWeek
+            'position' => Position::all(),
+            'week' => '17',
+            'year' => '2025'
         ]);
     }
 
@@ -68,6 +73,7 @@ class ProjectController extends Controller
             'title' =>  $disciplin->disciplin_name,
             'listdisciplin' => $disciplin,
             'employee' => $employee,
+            'team' => TeamProject::all()
         ]);
     }
 }
