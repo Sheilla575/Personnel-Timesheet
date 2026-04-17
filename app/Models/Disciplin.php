@@ -60,4 +60,22 @@ class Disciplin extends Model
     {
         return $this->hasMany(Timesheet::class, 'code_project', 'id'); // the code_project in timesheet is the id in disciplin
     }
+
+    public static function getIdDisciplineAttribute()
+    {
+        // Ambil entri terakhir berdasarkan kombinasi employee, week, dan year
+        $discipline = self::orderBy('id', 'desc')->first(); // Ambil ID terakhir
+
+        if ($discipline) {
+            // Ambil nomor urut terakhir dengan explode karena panjang kode bisa berubah
+            $lastNumber = (int) substr($discipline->id, 3);
+            $newNumber = str_pad($lastNumber + 1, 2, '0', STR_PAD_LEFT);
+        } else {
+            // Jika tidak ada, mulai dari 0001
+            $newNumber = "01";
+        }
+
+        // Format kode: TM-{employeeCode}-W{weekNumber}-{year}-{newNumber}
+        return "HOD{$newNumber}";
+    }
 }

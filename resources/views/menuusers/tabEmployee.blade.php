@@ -96,12 +96,84 @@
                                 <span class="text-muted sr-only">Action</span>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="#">Edit</a>
-                                <a class="dropdown-item" href="#">Remove</a>
-                                <a class="dropdown-item" href="#">Assign</a>
+                                <a class="dropdown-item" style="cursor: pointer" data-toggle="modal" data-target="#UpdateEmployee{{ $p->id }}">Edit</a>
+                                <form method="POST" action="{{ route('destroy_employee', $p->id) }}" class="d-inline" onsubmit="return confirm('are you sure want to delete this employee data - {{ $p->name }} ?')">
+                                    @csrf
+                                    <button class="dropdown-item" type="submit" data-toggle="tooltip" value="Delete" title=" Delete">
+                                        Remove
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
+                    <div class="modal fade" id="UpdateEmployee{{ $p->id }}" tabindex="-1" role="dialog" aria-labelledby="UpdateEmployee{{ $p->id }}" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="EditEmployeeLabel">Update {{ $p->name }}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{{ route('update_employee', $p->id) }}" method="POST">
+                                        @csrf
+                                        <div class="form-group row">
+                                            <div class="col-sm-3">Name</div>
+                                            <div class="col-sm-9">
+                                                <input class="form-control" type="text" name="name" value="{{ $p->name }}" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-3">Email</div>
+                                            <div class="col-sm-9">
+                                                <input class="form-control" type="text" name="email" value="{{ $p->email }}" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-3">Role Aksess </div>
+                                            <div class="col-sm-9">
+                                                <select class="form-control select2" id="simple-select2" name="level_roles">
+                                                    <option value="{{ $p->level_roles }}">{{ $p->role->roles_name }}</option>
+                                                    @foreach($roles as $r)
+                                                        <option value="{{ $r->id }}">{{ $r->roles_name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-3">Type User </div>
+                                            <div class="col-sm-9">
+                                                <select id="inputState4" class="custom-select my-1 mr-sm-2 select2" name="type_user" id="inlineFormInputName4">
+                                                    <option value="{{ $p->type_user }}">{{ $p->type_user }}</option>
+                                                    <option value="HO">HO</option>
+                                                    <option value="Non HO">Non HO</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-3">New Password</div>
+                                            <div class="col-sm-9">
+                                                <input class="form-control" type="password" name="password" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-2 text-right">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                Close
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">
+                                                submit
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <!-- <button type="button" class="btn mb-2 btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn mb-2 btn-primary">Send message</button> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     @endforeach
                 </tbody>
             </table>

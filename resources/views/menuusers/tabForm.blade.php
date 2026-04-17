@@ -37,7 +37,6 @@
                             <label for="inputState2">Position</label>
                             <select id="inputState2" class="form-control select2" name="id_position">
                                 <option selected>Choose...</option>
-                                <option value="0">00 - User Management/Person In Charge</option>
                                 @foreach($position as $p)
                                 <option value="{{ $p->id }}">{{ $p->positions_name }} - {{ $p->disciplin->disciplin_name }}</option>
                                 @endforeach

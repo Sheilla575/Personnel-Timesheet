@@ -21,7 +21,10 @@ class Timesheet extends Model
         'year',
         'code_project',
         'code_activity',
-        'status'
+        'status',
+        'submitted_at',
+        'approved_at',
+        'rejected_at'
     ];
 
     // protected static function boot()
@@ -35,6 +38,8 @@ class Timesheet extends Model
     //         }
     //     });
     // }
+
+
     public static function generateTimesheetCode($employeeCode, $weekNumber, $year)
     {
         // Ambil entri terakhir berdasarkan kombinasi employee, week, dan year

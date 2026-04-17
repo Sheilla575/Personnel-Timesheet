@@ -114,7 +114,6 @@
                                         Remove
                                     </button>
                                 </form>
-                                <a class="dropdown-item" href="#">Assign</a>
                             </div>
                         </td>
                     </tr>

@@ -395,13 +395,14 @@
 
                     let tableHTML = `
                         <table class="table table-borderless table-striped">
-                        
+
                         <input type="hidden" name="id_employee" value='{{ user()->id }}'>
                         <input type="hidden" name="week" value='${weekNumber}'>
                         <input type="hidden" name="year" value='${year}'>
                             <thead>
                                 <tr id="days-header">
                                     <th class="text-center"><button type="button" onclick="addNewRow()" class="btn mb-2 btn-light btn-sm mt-3"><span class="fe fe-plus-circle fe-16 text-primary"><span></button></th>
+                                    <th class="frozen-column w-10">Updated Status</th>
                                     <th class="frozen-column w-25">Project</th>
                                     <th>Activity</th>
                     `;
@@ -461,13 +462,21 @@
             let selectedProject = activity?.code_project ?? '';
             let selectedActivity = activity?.code_activity ?? '';
             let status = activity?.status ?? '';
+            let updateStatusDate = activity?.approved_at != null ? activity?.approved_at : activity?.rejected_at
             let detailDates = activity?.details ?? {};
+
+            if (updateStatusDate == null) {
+                updateStatusDate = "-"
+            }
 
             if (isLocked == 'new') {
                 rowHTML = `
                     <tr id="${rowId}">
                         <td class="text-center">
                             <a class="ml-2" onclick="removeRow('${rowId}')"><span class="fe fe-x-circle fe-16"></span></a>
+                        </td>
+                         <td>
+                            <span class="text-warning">${updateStatusDate}</span>
                         </td>
                         <td class="frozen-column w-25">
                         <select class="form-control form-control-sm select2 bg-transparent border-0" title="Judul Popover" name="activities[${rowId}][code_project]">
@@ -481,7 +490,7 @@
                                         @endforeach
                                     @endif
                                 @else
-                                    @if($projetUser->count() <= 0)  
+                                    @if($projetUser->count() <= 0)
                                         <option value="">You Don't any of Projet</option>
                                     @else
                                         @foreach ($projetUser as $p)
@@ -490,7 +499,7 @@
                                     @endif
                                 @endif
                             </optgroup>
-                            
+
                             <optgroup label="Internal Diciplin">
                                 @foreach($disciplin as $d)
                                     <option>{{ $d->disciplin_name }}</option>
@@ -505,7 +514,9 @@
                                 <option>No activities available for adding</option>
                                 @else
                                 @foreach ($activity as $a)
-                                <option value="{{ $a->activity_id }}">{{ $a->position_id }} - {{ $a->name_activity }}</option>
+                                    @if (user()->id_position == $a->position_id)
+                                        <option value="{{ $a->activity_id }}">{{ $a->position_id }} - {{ $a->name_activity }}</option>
+                                    @endif
                                 @endforeach
                                 @endif
                                 </optgroup>
@@ -525,15 +536,15 @@
                         if (match.status == 'Draft') {
                             rowHTML += `<td>
                                 <input type="hidden" name="activities[${rowId}][${noteId}][date]" value='${item.date}'>
-                                <input class="form-control form-control-sm text-center manhour-input" type="number" 
+                                <input class="form-control form-control-sm text-center manhour-input" type="number"
                                     value="${manHours}"
-                                    name="activities[${rowId}][${noteId}][man_hours]" 
+                                    name="activities[${rowId}][${noteId}][man_hours]"
                                     style="width: 60px;" onfocus="showNote('${noteId}')"
-                                    onblur="hideNote('${noteId}')" 
+                                    onblur="hideNote('${noteId}')"
                                     oninput="validateWeekHours()">
 
                                 <span id="${noteId}-tooltip" class="note-tooltip" style="display: none;">Note :
-                                <textarea id="${noteId}" name="activities[${rowId}][${noteId}][note]" class="form-control note-input mt-2" 
+                                <textarea id="${noteId}" name="activities[${rowId}][${noteId}][note]" class="form-control note-input mt-2"
                                     placeholder="Tambahkan catatan..." style="display: none;"></textarea></span>
                             </td>`;
                         }
@@ -546,14 +557,14 @@
                         } else {
                             rowHTML += `<td>
                                 <input type="hidden" name="activities[${rowId}][${noteId}][date]" value='${item.date}'>
-                                <input class="form-control form-control-sm text-center manhour-input" type="number" 
+                                <input class="form-control form-control-sm text-center manhour-input" type="number"
                                     value="${manHours}"
-                                    name="activities[${rowId}][${noteId}][man_hours]" 
+                                    name="activities[${rowId}][${noteId}][man_hours]"
                                     style="width: 60px;" onfocus="showNote('${noteId}')"
-                                    onblur="hideNote('${noteId}')" 
+                                    onblur="hideNote('${noteId}')"
                                     oninput="validateWeekHours()">
                                     <span id="${noteId}-tooltip" class="note-tooltip" style="display: none;">Note :
-                                <textarea id="${noteId}" name="activities[${rowId}][${noteId}][note]" class="form-control note-input mt-2" 
+                                <textarea id="${noteId}" name="activities[${rowId}][${noteId}][note]" class="form-control note-input mt-2"
                                 placeholder="Tambahkan catatan..." style="display: none;"></textarea></span>
                             </td>`;
                         }
@@ -568,6 +579,9 @@
                     <td class="text-center">
                         <span class="text-warning">${status}</span>
                     </td>
+                    <td>
+                        <span class="text-warning">${updateStatusDate}</span>
+                    </td>
                      <td class="frozen-column w-25">
                     <select class="form-control form-control-sm select2 bg-transparent border-0" title="Judul Popover" name="activities[${rowId}][code_project]">
                         <optgroup label="Select Project">
@@ -581,7 +595,7 @@
                             @endforeach
                             @endif
                         </optgroup>
-                        
+
                         <optgroup label="Internal Diciplin">
                             @foreach($disciplin as $d)
                                 <option>{{ $d->disciplin_name }}</option>
@@ -593,7 +607,9 @@
                         <select class="form-control form-control-sm mr-sm-2 bg-transparent border-0 text-muted select2" name="activities[${rowId}][code_activity]" style="width: max-content;" >
                             <optgroup label="Select Activity">
                                @foreach ($activity as $a)
-                                <option value="{{ $a->activity_id  }}" ${selectedActivity == "{{ $a->activity_id  }}" ? 'selected' : ''}>{{ $a->position_id }} - {{ $a->name_activity }}</option>
+                                    @if (user()->id_position == $a->position_id)
+                                        <option value="{{ $a->activity_id  }}" ${selectedActivity == "{{ $a->activity_id  }}" ? 'selected' : ''}>{{ $a->position_id }} - {{ $a->name_activity }}</option>
+                                    @endif
                                 @endforeach
                             </optgroup>
                         </select>
@@ -627,15 +643,15 @@
                         } else {
                             rowHTML += `<td>
                                 <input type="hidden" name="activities[${rowId}][${noteId}][date]" value='${item.date}'>
-                                <input class="form-control form-control-sm text-center manhour-input" type="number" 
+                                <input class="form-control form-control-sm text-center manhour-input" type="number"
                                     value="${manHours}"
-                                    name="activities[${rowId}][${noteId}][man_hours]" 
+                                    name="activities[${rowId}][${noteId}][man_hours]"
                                     style="width: 60px;" onfocus="showNote('${noteId}')"
-                                    onblur="hideNote('${noteId}')" 
+                                    onblur="hideNote('${noteId}')"
                                     oninput="validateWeekHours()">
 
                                 <span id="${noteId}-tooltip" class="note-tooltip" style="display: none;">Note :
-                                <textarea id="${noteId}" name="activities[${rowId}][${noteId}][note]" class="form-control note-input mt-2" 
+                                <textarea id="${noteId}" name="activities[${rowId}][${noteId}][note]" class="form-control note-input mt-2"
                                 placeholder="Tambahkan catatan..." style="display: none;"></textarea></span>
                             </td>`;
                         }
@@ -836,15 +852,15 @@
                 } else {
                     rowHTML += `<td>
                     <input type="hidden" name="activities[${rowId}][${noteId}][date]" value='${item.date}'>
-                    <input class="form-control form-control-sm text-center manhour-input" type="number" 
-                        
-                        name="activities[${rowId}][${noteId}][man_hours]" 
+                    <input class="form-control form-control-sm text-center manhour-input" type="number"
+
+                        name="activities[${rowId}][${noteId}][man_hours]"
                         style="width: 60px;" onfocus="showNote('${noteId}')"
-                        onblur="hideNote('${noteId}')" 
+                        onblur="hideNote('${noteId}')"
                         oninput="validateWeekHours()">
 
                     <span id="${noteId}-tooltip" class="note-tooltip" style="display: none;">Note :
-                    <textarea id="${noteId}" name="activities[${rowId}][${noteId}][note]" class="form-control note-input mt-2" 
+                    <textarea id="${noteId}" name="activities[${rowId}][${noteId}][note]" class="form-control note-input mt-2"
                         placeholder="Tambahkan catatan..." style="display: none;"></textarea></span>
                 </td>`;
                 }

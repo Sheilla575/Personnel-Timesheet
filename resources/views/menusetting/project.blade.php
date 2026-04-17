@@ -36,23 +36,62 @@
         </tr>
         @endforeach
     </tbody>
+    {{ $listproject->links('partials.pagination') }}
 </table>
-<nav aria-label="Table Paging" class="mb-0 text-muted">
-    <ul class="pagination justify-content-end mb-0">
-        <li class="page-item">
-            <a class="page-link" href="#">Previous</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="#">1</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="#">2</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="#">3</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="#">Next</a>
-        </li>
-    </ul>
-</nav>
+
+<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#addProject">
+    Add New Project
+</button>
+
+<div class="modal fade" id="addProject" tabindex="-1" role="dialog" aria-labelledby="addProjectLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form action="{{ route('store_Project') }}" method="POST">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Project</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="code_project">Code Project</label>
+                        <input type="text" class="form-control" name="code_project" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="name_project">Name Project</label>
+                        <input type="text" class="form-control" name="name_project" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="start_date">Start Date</label>
+                        <input type="date" class="form-control" name="start_date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="end_date">End Date</label>
+                        <input type="date" class="form-control" name="end_date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="project_manager">Project Manager</label>
+                        <select class="form-control select2" name="project_manager" required>
+                            <option value="">Select Manager</option>
+                            @foreach ($projectManagers as $manager)
+                                <option value="{{ $manager->id }}">{{ $manager->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Project</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

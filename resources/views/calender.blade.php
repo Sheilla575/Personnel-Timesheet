@@ -167,7 +167,7 @@
                                                                 <div class="input-group-text" id="button-addon-time"> <span class="fe fe-clock fe-16"></span>
                                                                 </div>
                                                             </div>
-                                                            <input type="number" class="form-control time-input" id="start-time" placeholder="0" />
+                                                            <input type="number" class="form-control time-input" id="start-time" placeholder="0" value="{{ $e->Bonus_Manhours }}" />
                                                         </div>
                                                     </div>
                                                 </div>

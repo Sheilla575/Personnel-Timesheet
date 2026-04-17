@@ -27,7 +27,8 @@ class CalendarController extends Controller
                 'title' => $event->agenda,
                 'date' => $event->date,
                 'description' => $event->note ?? '',
-                'color' => $event->color ?? '#3788d8'
+                'color' => $event->color ?? '#3788d8',
+                'Bonus_Manhours' => $event->Bonus_Manhours
             ];
         });
 

@@ -40,7 +40,7 @@ class ProjectController extends Controller
             'title' =>  $project->name_project,
             'project' => $project,
             'team' => $project->teamproject,
-            'timesheet' => $project->timesheet,
+            'timesheet' => $project->timesheet()->where('status', 'Pending')->get(),
             'timesheetactivity' => TimesheetActivity::orderBy('date')->get(),
             'employee' => Employee::all(),
             'position' => Position::all(),
